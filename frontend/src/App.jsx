@@ -1,13 +1,18 @@
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import { Button } from './components/ui/button'
+import Navbar from './components/Navbar/Navbar'
+import Homepage from './components/HomePage/Homepage'
 
 function App() {
 
   return (
-    <div className='bg-red-500 flex justify-center w-[100%]'>
-      <div>
-      <Button>Click me</Button>
-    </div>
+    <div>
+      <Navbar/>
+      <Routes>
+        <Route path='/' element={
+          <Homepage/>}
+        />
+      </Routes>
     </div>
   )
 }
