@@ -10,7 +10,7 @@ import avatar from "../../assets/avatar.png";
 const Navbar = () => {
     return (
         <div className="w-full text-white bg-[#118B50] py-3 sticky top-0 left-0 z-50 rounded-b-[5px]">
-            <div className="w-[80%] mx-auto flex items-center justify-between">
+            <div className="w-[98%] px-2 mx-auto flex items-center justify-between">
                 <div className="flex">
                     <p className="font-[Inter] text-[whitesmoke] text-lg font-bold cursor-pointer bg-[#409977] rounded-bl-[4px] rounded-tl-[4px] py-1 px-2">
                         Food

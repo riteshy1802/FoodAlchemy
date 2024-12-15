@@ -64,12 +64,12 @@ const FilterSection = () => {
     const [addDisable, setAddDisable] = useState(true);
 
     const disabledButtonStyles = {
-        backgroundColor:'#4fa886'
+        backgroundColor:'#449173'
     }
 
     const handleAllergensAddition = () => {
         const allergenName = allergenInputRef.current.value
-        if(allergenName.trim.length>0){
+        if(allergenName.trim().length>0){
             const allergen = {
                 id:nanoid(),
                 name : allergenInputRef.current.value
@@ -106,7 +106,7 @@ const FilterSection = () => {
     const [value, setValue] = useState("")
 
     return (
-        <div className="min-h-[80vh] w-[20%] ml-* border-2 py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
+        <div className="min-h-[80vh] ml-* border-2 py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
             <div className="flex items-center w-[100%]">
                 <p className="font-[Inter] text-[0.9rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] flex items-center decoration-[1.5px] gap-[0.4rem]">
                     <Filter
@@ -114,7 +114,7 @@ const FilterSection = () => {
                     />
                     Filters
                 </p>
-                <div className="ml-auto">
+                <div className="ml-auto flex items-center gap-[0.4rem]">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
@@ -273,6 +273,7 @@ const FilterSection = () => {
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Allergic To</p>
                         <input 
                             ref={allergenInputRef} 
+                            placeholder="eg gluten"
                             className="w-[100%] font-[Inter] indent-[2px] text-[0.8rem] px-2 py-1.5 border border-3-gray rounded-[6px] focus:outline-none"
                             onChange={(e)=>handleInputChange(e)}
                         />
@@ -305,7 +306,6 @@ const FilterSection = () => {
                             }
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
