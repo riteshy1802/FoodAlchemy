@@ -75,6 +75,7 @@ const FilterSection = () => {
                 name : allergenInputRef.current.value
             }
             setAllergens((prev)=>[...prev, allergen]);
+            setAddDisable(true)
             allergenInputRef.current.value="";
         }
     }
@@ -301,7 +302,7 @@ const FilterSection = () => {
                             ))
                             :
                                 <div className="w-[100%] flex items-center justify-center">
-                                    <p className="text-[#171717] font-[450] text-[0.8rem] font-[Inter]">No Allergens Added</p>
+                                    <p className="text-[#171717] font-[450] text-[0.8rem] font-[Inter]">No Allergens Specified</p>
                                 </div>
                             }
                         </div>

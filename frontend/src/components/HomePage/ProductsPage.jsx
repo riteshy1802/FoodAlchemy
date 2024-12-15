@@ -6,8 +6,16 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 // import brbon from "../../assets/ProductsImages/brbon.png";
-import mummagic from "../../assets/ProductsImages/mummagic.png";
+// import mummagic from "../../assets/ProductsImages/mummagic.png";
 const ProductsPage = () => {
+
+    const trimText = (text) => {
+        if (text.length > 30) {
+            return text.slice(0, 100) + '...';
+        }
+        return text;
+    }
+
     return (
         <div className="w-[100%] flex flex-col items-start justify-center">
             <div className="w-[100%] mt-2 flex p-4 flex-col justify-between">
@@ -43,6 +51,9 @@ const ProductsPage = () => {
                 </div>
                 <p className="font-[600] mt-3 text-[1.8rem] text-[#383838]">Something based on recent searches..</p>
             </div>
+
+
+
             <div className="w-[100%] flex px-4 flex-wrap justify-between">
                 <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
                     <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
@@ -61,9 +72,18 @@ const ProductsPage = () => {
                             </Tooltip>
                         </TooltipProvider>
                     </div>
+                    <div className="w-[100%] px-3">
+                        <p className="font-[Inter] text-[0.65rem]">{trimText("Categories : Breakfasts, Spreads, Sweet spreads, fr:Pâtes à tartiner, Hazelnut spreads, Chocolate spreads, Cocoa and hazelnuts spreads")}</p>
+                    </div>
                 </div>
+            </div>
+        </div>
+    )
+}
 
-                <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
+export default ProductsPage
+
+{/* <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
                     <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
                         <img src="https://images.openfoodfacts.org/images/products/544/900/000/0996/front_en.782.400.jpg" className="h-[30vh] max-w-full rounded-[3px]"/>
                     </div>
@@ -88,10 +108,4 @@ const ProductsPage = () => {
                 <div className=" w-[220px] mr-2 rounded-[8px] bg-[gray] pb-3 cursor-pointer">
                     <img src={mummagic} className="w-[100%] h-[30vh] rounded-[8px]"/>
 
-                </div>
-            </div>
-        </div>
-    )
-}
-
-export default ProductsPage
+                </div> */}
