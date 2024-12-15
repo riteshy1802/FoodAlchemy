@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, RotateCcw, X } from "lucide-react"
+import { Check, ChevronsUpDown, Filter, RotateCcw, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -61,14 +61,30 @@ const FilterSection = () => {
     const [maxValue, setMaxValue] = useState(77);
     const [allergens, setAllergens] = useState([]);
     const allergenInputRef = useRef(null);
+    const [addDisable, setAddDisable] = useState(true);
+
+    const disabledButtonStyles = {
+        backgroundColor:'#4fa886'
+    }
 
     const handleAllergensAddition = () => {
-        const allergen = {
-            id:nanoid(),
-            name : allergenInputRef.current.value
+        const allergenName = allergenInputRef.current.value
+        if(allergenName.trim.length>0){
+            const allergen = {
+                id:nanoid(),
+                name : allergenInputRef.current.value
+            }
+            setAllergens((prev)=>[...prev, allergen]);
+            allergenInputRef.current.value="";
         }
-        setAllergens((prev)=>[...prev, allergen]);
-        allergenInputRef.current.value="";
+    }
+
+    const handleInputChange = (e) => {
+        if(e.target.value.trim().length>0){
+            setAddDisable(false);
+        }else{
+            setAddDisable(true)
+        }
     }
 
     const handleAllergenDelete = (id) => {
@@ -92,21 +108,26 @@ const FilterSection = () => {
     return (
         <div className="min-h-[80vh] w-[20%] ml-* border-2 py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
             <div className="flex items-center w-[100%]">
-                <p className="font-[Inter] text-[1rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] decoration-[1.5px]">Filters</p>
-                    <div className="ml-auto">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <div className="p-2 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
-                                        <RotateCcw size={15} color="#383838"/>
-                                    </div>
-                                    <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
-                                        <p>Reset all changes</p>
-                                    </TooltipContent>
-                                </TooltipTrigger>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </div>
+                <p className="font-[Inter] text-[0.9rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] flex items-center decoration-[1.5px] gap-[0.4rem]">
+                    <Filter
+                        size={15}
+                    />
+                    Filters
+                </p>
+                <div className="ml-auto">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <div className="p-2 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
+                                    <RotateCcw size={15} color="#383838"/>
+                                </div>
+                                <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
+                                    <p>Reset all changes</p>
+                                </TooltipContent>
+                            </TooltipTrigger>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
             </div>
             <div className="mt-4">
                 <div className="mt-2">
@@ -250,10 +271,16 @@ const FilterSection = () => {
 
                     <div className="mt-3  w-[100%] h-auto">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Allergic To</p>
-                        <input ref={allergenInputRef} className="w-[100%] font-[Inter] indent-[2px] text-[0.8rem] px-2 py-1.5 border border-3-gray rounded-[6px] focus:outline-none"/>
+                        <input 
+                            ref={allergenInputRef} 
+                            className="w-[100%] font-[Inter] indent-[2px] text-[0.8rem] px-2 py-1.5 border border-3-gray rounded-[6px] focus:outline-none"
+                            onChange={(e)=>handleInputChange(e)}
+                        />
                         <div className="w-[100%] flex mt-2">
                             <button 
                                 type="button" 
+                                disabled={addDisable}
+                                style={addDisable ? disabledButtonStyles : null}
                                 className="font-[Inter] bg-[#138B4F] ml-auto text-[white] px-3 py-1 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.7rem]"
                                 onClick={handleAllergensAddition}
                             >
