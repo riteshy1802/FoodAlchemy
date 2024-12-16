@@ -5,16 +5,17 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-// import brbon from "../../assets/ProductsImages/brbon.png";
-// import mummagic from "../../assets/ProductsImages/mummagic.png";
+import ProductCard from "./ProductCard";
+import { useState } from "react";
+import BarcodeModal from "./BarcodeModal";
 const ProductsPage = () => {
 
-    const trimText = (text) => {
-        if (text.length > 30) {
-            return text.slice(0, 100) + '...';
-        }
-        return text;
+    const [showBarcodeInput,setShowBarcodeInput] = useState(false); 
+
+    const modalOpenFunction = () => {
+        setShowBarcodeInput((prev)=>!prev);
     }
+    
 
     return (
         <div className="w-[100%] flex flex-col items-start justify-center">
@@ -26,57 +27,57 @@ const ProductsPage = () => {
                             <input className="indent-[30px] px-2 py-1.5 w-[100%] focus:outline-none border rounded-[4px] text-[0.9rem] font-[Inter]" placeholder="Search for something..."/>
                         </div>
                     </div>
-                    <div className="w-[15%]">
+                    <div className="w-[10%]">
                         <button 
                             type="button" 
-                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[1rem]"
+                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.8rem]"
                         >
                             Search
                         </button>
                     </div>
-                    <div className="w-[10%] flex items-center justify-center py-1 bg-[#f2f2f2] rounded-[2px] hover:bg-[#d1d1d1] transition duration-100 ease-in-out cursor-pointer">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                        <div className="w-[100%] flex items-center justify-center py-1 rounded-[2px] cursor-pointer">
-                                            <Barcode size={25} color="#383838"/>
+                    <div className="w-[15%]">
+                        <div className="w-[100%] flex items-center justify-center bg-[#f2f2f2] rounded-[2px] hover:bg-[#d1d1d1] transition duration-100 ease-in-out cursor-pointer">
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        <div className="w-[100%]" onClick={modalOpenFunction}>
+                                            <div className="w-[100%] flex items-center justify-center py-1 px-5 rounded-[2px] cursor-pointer">
+                                                <p className="flex items-center gap-[0.5rem] text-[0.9rem] text-[#171717] font-[Inter] font-[450]">
+                                                    <Barcode size={25} color="#383838"/>Barcode
+                                                </p>
+                                            </div>
                                         </div>
-                                    <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
-                                        <p>Search using barcode</p>
-                                    </TooltipContent>
-                                </TooltipTrigger>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </div>
-                </div>
-                <p className="font-[600] mt-3 text-[1.8rem] text-[#383838]">Something based on recent searches..</p>
-            </div>
-
-
-
-            <div className="w-[100%] flex px-4 flex-wrap justify-between">
-                <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
-                    <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
-                        <img src="https://images.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg" className="h-[30vh] max-w-full rounded-[3px]"/>
-                    </div>
-                    <div className="w-[100%] flex justify-center items-center px-2 mt-2">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <p className="font-[Inter] font-[500] text-[#383838] text-[0.9rem]">Stir fry Rice Noodles</p>
-                                    <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
-                                        <p className="font-[Inter] text-[0.7rem]">Stir fry Rice Noodles</p>
-                                    </TooltipContent>
-                                </TooltipTrigger>
-                                <p className="text-[0.8rem] text-[gray] ml-2">Qty:23g</p>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </div>
-                    <div className="w-[100%] px-3">
-                        <p className="font-[Inter] text-[0.65rem]">{trimText("Categories : Breakfasts, Spreads, Sweet spreads, fr:Pâtes à tartiner, Hazelnut spreads, Chocolate spreads, Cocoa and hazelnuts spreads")}</p>
+                                        <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
+                                            <p>Search using barcode</p>
+                                        </TooltipContent>
+                                    </TooltipTrigger>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </div>
+                        {showBarcodeInput && 
+                            <div className="absolute bottom right-8 mt-2 z-[100]">
+                                <BarcodeModal
+                                    modalOpenFunction={modalOpenFunction}
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
+            <div className="px-4">
+                <p className="font-[600]  text-[1.8rem] text-[#383838]">Something based on recent searches..</p>
+            </div>
+
+
+            <div className="w-[100%] flex px-4 flex-wrap justify-start gap-[0.2rem]">
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+            </div>
+            
         </div>
     )
 }

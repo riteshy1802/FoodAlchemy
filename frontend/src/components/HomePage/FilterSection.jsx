@@ -107,7 +107,7 @@ const FilterSection = () => {
     const [value, setValue] = useState("")
 
     return (
-        <div className="min-h-[80vh] ml-* border-2 py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
+        <div className="min-h-[80vh] ml-* py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
             <div className="flex items-center w-[100%]">
                 <p className="font-[Inter] text-[0.9rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] flex items-center decoration-[1.5px] gap-[0.4rem]">
                     <Filter
@@ -143,7 +143,7 @@ const FilterSection = () => {
                             >
                             {value
                                 ? frameworks.find((framework) => framework.value === value)?.label
-                                : "Select framework..."}
+                                : "Any"}
                             <ChevronsUpDown className="ml-1 h-2 w-2 shrink-0 opacity-50" />
                             </Button>
                         </PopoverTrigger>

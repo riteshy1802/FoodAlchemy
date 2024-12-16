@@ -33,8 +33,9 @@ const Navbar = () => {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <div className="bg-[#419977] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#449173] transition duration-200 ease-in-out">
+                                <div className="bg-[#419977] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#449173] transition duration-200 ease-in-out relative">
                                     <ShoppingCart />
+                                    <p className="absolute px-1 right-0 bottom-0 bg-red-500 rounded-full text-[0.6rem]">3</p>
                                 </div>
                                 <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
                                     <p>Show Cart</p>
