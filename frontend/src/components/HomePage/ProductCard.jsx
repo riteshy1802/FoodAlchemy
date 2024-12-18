@@ -15,7 +15,7 @@ const ProductCard = () => {
     }
 
     return (
-        <div className="w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer hover:shadow-2xl transition-shadow duration-300">
+        <div className="w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
                 <img src="https://images.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg" className="h-[30vh] max-w-full rounded-[3px]"/>
             </div>
@@ -39,6 +39,9 @@ const ProductCard = () => {
                 <p className="text-[#171717] font-[Inter] text-[0.6rem] font-[Inter] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
                 <p className="teyt-[#171717] font-[Inter] text-[0.6rem] font-[Inter] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
                 <p className="text-[#171717] font-[Inter] text-[0.6rem] font-[Inter] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
+            </div>
+            <div className="w-[100%] px-3 py-1 flex justify-center">
+                <p className="font-[Inter] font-[450] text-[#5c5c5c]">Price : ₹48</p>
             </div>
             <div className="w-[100%] px-3 mt-2">
                 {/* <button className="w-[100%] bg-[#118B50] py-1 flex items-center justify-center rounded-[3px]">

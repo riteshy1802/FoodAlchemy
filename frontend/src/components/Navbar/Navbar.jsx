@@ -6,8 +6,18 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import avatar from "../../assets/avatar.png";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+
+    const navigate = useNavigate();
+
+    const handleToCart = () => {
+        if(window.location.pathname!=='/cart'){
+            navigate('/cart');
+        }
+    }
+
     return (
         <div className="w-full text-white bg-[#118B50] py-3 sticky top-0 left-0 z-50 rounded-b-[5px]">
             <div className="w-[98%] px-2 mx-auto flex items-center justify-between">
@@ -33,7 +43,10 @@ const Navbar = () => {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <div className="bg-[#419977] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#449173] transition duration-200 ease-in-out relative">
+                                <div 
+                                    className="bg-[#419977] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#449173] transition duration-200 ease-in-out relative"
+                                    onClick={handleToCart}
+                                >
                                     <ShoppingCart />
                                     <p className="absolute px-1 right-0 bottom-0 bg-red-500 rounded-full text-[0.6rem]">3</p>
                                 </div>
