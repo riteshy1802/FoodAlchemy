@@ -1,7 +1,11 @@
 
 const ProductDetails = () => {
     return (
-        <div>ProductDetails</div>
+        <div
+            className="mt-20"
+        >
+            ProductDetails
+        </div>
     )
 }
 
