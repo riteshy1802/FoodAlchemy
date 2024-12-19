@@ -82,7 +82,7 @@ const PriceDetails = () => {
                         </div>
                         {couponApplied && <div className="w-[100%] flex mt-1 items-center justify-between gap-[2rem]">
                             <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[550] text-[0.85rem]">Discount</p>
-                            <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333] mt-2 text-[#138B4F]"><span className="text-[black]">-</span> ₹3333.33</p>
+                            <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 mt-2 text-[green]"><span className="text-[black]">-</span> ₹3333.33</p>
                         </div>}
                         {couponApplied &&
                             <>

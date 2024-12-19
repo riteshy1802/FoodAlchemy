@@ -1,4 +1,4 @@
-import { Barcode, Search } from "lucide-react";
+import { ArrowDown, Barcode, Search } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -31,7 +31,7 @@ const ProductsPage = () => {
                     <div className="w-[10%]">
                         <button 
                             type="button" 
-                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.8rem]"
+                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out active:scale-[0.98] text-[0.9rem]"
                         >
                             Search
                         </button>
@@ -77,6 +77,28 @@ const ProductsPage = () => {
                 <ProductCard/>
                 <ProductCard/>
                 <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+                <ProductCard/>
+            </div>
+            <div className="w-[100%] mt-3 flex px-5 mt-5">
+                <button className="ml-auto px-4 py-1.5 bg-[#e3e3e3] hover:bg-[#cccccc] active:bg-[#bfbfbf] active:scale-[0.98] transition duration-200 ease-in-out flex items-center gap-[0.2rem] font-[Inter] font-[500] text-[#2e2e2e] text-[0.85rem] rounded-[3px]">Load More <ArrowDown strokeWidth={1.5} size={20}/></button>
             </div>
             
         </div>
@@ -84,30 +106,3 @@ const ProductsPage = () => {
 }
 
 export default ProductsPage
-
-{/* <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
-                    <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
-                        <img src="https://images.openfoodfacts.org/images/products/544/900/000/0996/front_en.782.400.jpg" className="h-[30vh] max-w-full rounded-[3px]"/>
-                    </div>
-                    <div className="w-[100%] px-2 mt-2">
-                        <p className="font-[Inter]  font-[500] text-[#383838] text-[1rem]">Bourbon Biscuit</p>
-                    </div>
-                </div>
-
-                <div className="w-[220px] mr-2 rounded-[8px] border pb-3 cursor-pointer">
-                    <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
-                        <img src="https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg" className="h-[30vh] max-w-full rounded-[3px]"/>
-                    </div>
-                    <div className="w-[100%] px-2 mt-2">
-                        <p className="font-[Inter]  font-[500] text-[#383838] text-[1rem]">Bourbon Biscuit</p>
-                    </div>
-                </div>
-
-                <div className=" w-[220px] mr-2 rounded-[8px] bg-[gray] pb-3 cursor-pointer">
-                    <img src={mummagic} className="w-[100%] h-[30vh] rounded-[8px]"/>
-
-                </div>
-                <div className=" w-[220px] mr-2 rounded-[8px] bg-[gray] pb-3 cursor-pointer">
-                    <img src={mummagic} className="w-[100%] h-[30vh] rounded-[8px]"/>
-
-                </div> */}

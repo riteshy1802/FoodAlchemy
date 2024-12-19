@@ -4,7 +4,7 @@ import ProductsPage from "./ProductsPage"
 const Homepage = () => {
     return (
         <div className="flex w-[100%] mt-20 items-center justify-center gap-[3rem]">
-            <div className="w-[100%] h-[150vh] relative flex px-2">
+            <div className="w-[100%] min-h-[100vh] relative flex px-2">
                 <div className="w-[20%]"> 
                     <FilterSection/>
                 </div>
