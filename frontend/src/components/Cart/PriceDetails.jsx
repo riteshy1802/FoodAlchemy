@@ -121,6 +121,9 @@ const PriceDetails = () => {
                         </button>
                     </div>
                 </div>
+                <div className="mt-2 bg-[#095931] text-[whitesmoke] mt-3 rounded-[4px] px-4 py-3">
+                    <p className="font-[Inter] text-[0.85rem]">🥳 Kickstart 2024 with a Bang! Use code <span className="font-[700]">FA_NEW_YEAR_2024</span> and enjoy exclusive savings!</p>
+                </div>
             </div>
         </>
     )

@@ -17,6 +17,7 @@ const ProductsPage = () => {
     }
     
 
+
     return (
         <div className="w-[100%] flex flex-col items-start justify-center">
             <div className="w-[100%] mt-2 flex p-4 flex-col justify-between">

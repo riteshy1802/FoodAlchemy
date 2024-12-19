@@ -19,13 +19,13 @@ const Navbar = () => {
     }
 
     return (
-        <div className="w-full text-white bg-[#118B50] py-3 sticky top-0 left-0 z-50 rounded-b-[5px]">
+        <div className="w-full text-white bg-[#046e39] py-3 rounded-b-[5px] z-[9] fixed top-0 left-0">
             <div className="w-[98%] px-2 mx-auto flex items-center justify-between">
                 <div className="flex">
-                    <p className="font-[Inter] text-[whitesmoke] text-lg font-bold cursor-pointer bg-[#409977] rounded-bl-[4px] rounded-tl-[4px] py-1 px-2">
+                    <p className="font-[Inter] text-[whitesmoke] text-lg font-bold cursor-pointer bg-[#1d7855] border-2 border-[whitesmoke] rounded-bl-[4px] rounded-tl-[4px] py-1 px-2">
                         Food
                     </p>
-                    <p className="font-[Inter] text-lg text-[#409977] font-bold cursor-pointer bg-[whitesmoke] rounded-br-[4px] rounded-tr-[4px] py-1 px-2">
+                    <p className="font-[Inter] text-lg text-[#409977] font-bold cursor-pointer bg-[whitesmoke] border-2 border-[#1d7855] rounded-br-[4px] rounded-tr-[4px] py-1 px-2">
                         Alchemy
                     </p>
                 </div>
@@ -44,7 +44,7 @@ const Navbar = () => {
                         <Tooltip>
                             <TooltipTrigger>
                                 <div 
-                                    className="bg-[#419977] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#449173] transition duration-200 ease-in-out relative"
+                                    className="bg-[#2c7a5d] p-2 flex items-center justify-center rounded-[4px] cursor-pointer hover:bg-[#3b8a6b] transition duration-200 ease-in-out relative"
                                     onClick={handleToCart}
                                 >
                                     <ShoppingCart />

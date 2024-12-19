@@ -9,8 +9,8 @@ function App() {
 
   return (
     <div>
-      <Toaster/>
       <Navbar/>
+      <Toaster/>
       <Routes>
         <Route path='/' element={
           <Homepage/>}
