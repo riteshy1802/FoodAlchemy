@@ -53,7 +53,7 @@ const ProductCard = () => {
                         />
                     </div>
                     <Nova
-                        novaScore={3}
+                        novaScore='?'
                         pd={'px-1 py-0.5'}
                         text={ `text-[0.7rem]`}
                     />

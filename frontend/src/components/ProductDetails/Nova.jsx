@@ -28,19 +28,23 @@ const Nova = ({novaScore, pd, text}) => {
 
     return (
         <div 
-            className={`w-[5] h-[10] ${pd} rounded-[3px] flex items-center flex-wrap gap-[0.3rem] ${novaScoreColors[novaScore].bg}`}
-            title={novaScoreColors[novaScore].title}
+            className={`w-[5] h-[10] ${pd} rounded-[3px] flex items-center flex-wrap gap-[0.3rem] ${novaScore!=='?' ? (novaScoreColors[novaScore].bg) : (`bg-[#e0e0e0]`)}`}
+            title={novaScore!=='?' ? (novaScoreColors[novaScore]?.title) : "Unknown score"}
         >
-            <p className={`text-[0.7rem] ${novaScoreColors[novaScore].text} ${text} font-[Inter] font-[400]`}>Nova - </p>
-            <p className={`${novaScoreColors[novaScore].text}  ${text} text-[0.8rem] font-[Inter] font-[700]`}>{novaScore}</p>
+            <p className={`text-[0.7rem] ${novaScoreColors[novaScore]?.text} ${text} font-[Inter] font-[400]`}>Nova - </p>
+            <p className={`${novaScoreColors[novaScore]?.text}  ${text} text-[0.8rem] font-[Inter] font-[700]`}>{novaScore}</p>
         </div>
     )
 }
 
 Nova.propTypes={
-    novaScore : PropTypes.number,
+    novaScore : PropTypes.string,
     pd : PropTypes.string,
     text : PropTypes.string,
+}
+
+Nova.default = {
+    novaScore : '?'
 }
 
 export default Nova
