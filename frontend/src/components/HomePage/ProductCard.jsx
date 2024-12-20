@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Minus, Plus } from "lucide-react";
 import NutriScore from "../ProductDetails/NutriScore";
+import Nova from "../ProductDetails/Nova";
 const ProductCard = () => {
 
     const trimText = (text) => {
@@ -43,16 +44,21 @@ const ProductCard = () => {
             </div>
             <div className="w-[100%] px-3 py-1 flex items-center">
                 <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹48</p>
-                <div className="ml-auto">
-                    <NutriScore
-                        score="B"
-                        width={4}
-                        height={4}
+                <div className="ml-auto flex items-center gap-[0.5rem]">
+                    <div className="ml-auto">
+                        <NutriScore
+                            score="B"
+                            width={4}
+                            height={4}
+                        />
+                    </div>
+                    <Nova
+                        novaScore={2}
                     />
                 </div>
             </div>
-            <div className="w-[100%] px-3">
-                <button className="w-[100%] bg-[#118B50] py-1 flex items-center gap-[0.5rem] justify-center rounded-[3px] text-[white]">
+            <div className="w-[100%] px-3 mt-2">
+                <button className="w-[100%] bg-[#118B50] active:bg-[#0e7342] transition duration-150 ease-in-out py-1 flex items-center gap-[0.5rem] justify-center rounded-[3px] text-[white]">
                     <Plus color="white" size={18}/>Add
                 </button>
                 {/* <div className="w-[100%] flex items-center justify-center gap-1">

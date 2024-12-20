@@ -12,17 +12,19 @@ const NutriScore = ({ score, width, height }) => {
 
     return (
         <div className="flex items-center rounded-md">
-            {nutriScores.map((item) => (
-            <div
-                key={item}
-                className={`w-${width} h-${height} flex items-center justify-center font-[500] transition-transform ${
-                scoreColors[item]
-                } ${item === score ? "scale-[1.15] shadow-md font-[700]" : "opacity-100"}`}
-                title={`Nutri-Score: ${item}`}
-            >
-                {item}
-            </div>
-            ))}
+            <>
+                {nutriScores.map((item) => (
+                <div
+                    key={item}
+                    className={`w-${width} h-${height} p-2 p-2 flex items-center justify-center font-[500] transition-transform ${
+                    scoreColors[item]
+                    } ${item === score ? "scale-[1.15] shadow-md font-[700]" : "opacity-100"}`}
+                    title={`Nutri-Score: ${item}`}
+                >
+                    {item}
+                </div>
+                ))}
+            </>
         </div>
     );
 };

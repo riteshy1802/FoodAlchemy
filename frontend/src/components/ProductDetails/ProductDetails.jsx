@@ -141,6 +141,15 @@ const ProductDetails = () => {
                                 ))
                             }
                         </div>
+                        <div>
+                            <p className="text-[0.9rem] mt-4 text-[#616161] font-[Inter] font-[600]">Nutriments - </p>
+                            <div className="grid w-[50%] grid-cols-[70%_30%] mt-1">
+                                <div className="border-2 border-[gray] px-2 py-1">Hello Hello Hello Hello Hello</div>
+                                <div className="border-2 border-l-0 border-[gray] px-2 py-1">Hello</div>
+                                <div className="border-2 border-[gray] border-t-0 px-2 py-1">Hello</div>
+                                <div className="border-2 border-l-0 border-t-0 border-[gray] px-2 py-1">Hello</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

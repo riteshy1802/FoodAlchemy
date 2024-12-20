@@ -4,11 +4,11 @@ import ProductsPage from "./ProductsPage"
 const Homepage = () => {
     return (
         <div className="flex w-[100%] mt-20 items-center justify-center gap-[3rem]">
-            <div className="w-[100%] min-h-[100vh] relative flex px-2">
-                <div className="w-[20%]"> 
+            <div className="w-[100%] h-auto relative flex px-2">
+                <div className="w-[20%] fixed overflow-hidden"> 
                     <FilterSection/>
                 </div>
-                <div className=" ml-2 border-l-2 w-[85%] pb-5">
+                <div className=" ml-[20%] border-l-2 w-[85%] pb-5">
                     <ProductsPage/>
                 </div>
             </div>
