@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import avatar from "../../assets/avatar.png";
 import { useNavigate } from "react-router-dom";
+import happyLogo from "../../assets/happy.png"
 
 const Navbar = () => {
 
@@ -22,12 +23,13 @@ const Navbar = () => {
         <div className="w-full text-white bg-[#046e39] py-3 rounded-b-[5px] z-[9] fixed top-0 left-0">
             <div className="w-[98%] px-2 mx-auto flex items-center justify-between">
                 <div className="flex">
-                    <p className="font-[Inter] text-[whitesmoke] text-lg font-bold cursor-pointer bg-[#1d7855] border-2 border-[whitesmoke] rounded-bl-[4px] rounded-tl-[4px] py-1 px-2">
+                    {/* <p className="font-[Inter] text-[whitesmoke] text-lg font-bold cursor-pointer bg-[#1d7855] border-2 border-[whitesmoke] rounded-bl-[4px] rounded-tl-[4px] py-1 px-2">
                         Food
                     </p>
                     <p className="font-[Inter] text-lg text-[#409977] font-bold cursor-pointer bg-[whitesmoke] border-2 border-[#1d7855] rounded-br-[4px] rounded-tr-[4px] py-1 px-2">
                         Alchemy
-                    </p>
+                    </p> */}
+                    <img src={happyLogo} className="w-[15%] " />
                 </div>
                 <div className="avatar--cart flex items-center gap-[1.5rem]">
                     <TooltipProvider>

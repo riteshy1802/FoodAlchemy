@@ -32,7 +32,7 @@ const Cart = () => {
                 <div className="w-[70%]">
                     {/* Heading */}
                     <div>
-                        <div className="shadow-md rounded-[5px] pb-5">
+                        <div className="shadow-md rounded-[5px] pb-10">
                             <div className="w-[100%] bg-[#036E39] rounded-[5px] p-4 flex items-center">
                                 <div className="w-[100] flex items-center">
                                     <div 
@@ -51,12 +51,13 @@ const Cart = () => {
                             {/* Product CartItems */}
 
                             {items.length>0 &&
-                                    items.map((item)=>(
+                                    items.map((item, index)=>(
                                     <div key={item.id} className="">
                                         <CartItem/>
-                                        <div className="w-[100%] px-5">
+                                        {index!==items.length-1 && 
+                                            <div className="w-[100%] px-5">
                                             <hr className="mt-5"/>
-                                        </div>
+                                        </div>}
                                     </div>
                                 ))
                             }

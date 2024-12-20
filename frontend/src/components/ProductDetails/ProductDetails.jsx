@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useState } from "react"
 import { FaHeart, FaShoppingCart  } from "react-icons/fa";
 import NutriScore from "./NutriScore";
+import Nova from "./Nova";
 
 const ProductDetails = () => {
 
@@ -113,13 +114,22 @@ const ProductDetails = () => {
                         <p className="text-[#3b3b3b] font-[Inter] text-[0.8rem] font-[Inter] font-[500] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
                     </div>
                     <div className="flex items-center w-[100%]">
-                        <div className="flex items-center">
-                            <p className="text-[0.9rem] text-[#616161] font-[Inter] font-[600] mr-3">Nutri-Score - </p>
-                            <NutriScore
-                                score="C"
-                                width={8}
-                                height={8}
-                            />
+                        <div className="flex items-center gap-[2rem]">
+                            <div className="flex items-center">
+                                <p className="text-[0.9rem] text-[#616161] font-[Inter] font-[600] mr-3">Nutri-Score - </p>
+                                <NutriScore
+                                    score="C"
+                                    width={8}
+                                    height={8}
+                                />
+                            </div>
+                            <div className="flex inline-block cursor-pointer">
+                                <Nova
+                                    novaScore={3}
+                                    pd={'px-2 py-1'}
+                                    text={ `text-[0.9rem]`}
+                                />
+                            </div>
                         </div>
                         <Barcode 
                             className="ml-auto"

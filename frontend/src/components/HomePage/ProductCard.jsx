@@ -17,8 +17,8 @@ const ProductCard = () => {
     }
 
     return (
-        <div className="w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer hover:shadow-md transition-shadow duration-300">
-            <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-bt-[8px]">
+        <div className="w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer border-2 border-[white] hover:border-2 hover:border-[#078246] transition-shadow duration-300">
+            <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-t-[8px]">
                 <img src="https://images.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg" className="h-[25vh] max-w-full rounded-[3px]"/>
             </div>
             <div className="w-[100%] flex justify-center items-center px-2 mt-2">
@@ -42,18 +42,20 @@ const ProductCard = () => {
                 <p className="teyt-[#171717] font-[Inter] text-[0.6rem] font-[Inter] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
                 <p className="text-[#171717] font-[Inter] text-[0.6rem] font-[Inter] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
             </div>
-            <div className="w-[100%] px-3 py-1 flex items-center">
+            <div className="w-[100%] px-3 py-1 flex items-center mt-2">
                 <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹48</p>
                 <div className="ml-auto flex items-center gap-[0.5rem]">
                     <div className="ml-auto">
                         <NutriScore
                             score="B"
-                            width={4}
+                            width={3}
                             height={4}
                         />
                     </div>
                     <Nova
-                        novaScore={2}
+                        novaScore={3}
+                        pd={'px-1 py-0.5'}
+                        text={ `text-[0.7rem]`}
                     />
                 </div>
             </div>

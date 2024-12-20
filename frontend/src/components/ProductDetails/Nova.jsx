@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-const Nova = ({novaScore}) => {
+const Nova = ({novaScore, pd, text}) => {
 
     const novaScoreColors = {
         1: { 
@@ -28,17 +28,19 @@ const Nova = ({novaScore}) => {
 
     return (
         <div 
-            className={`w-[5] h-[10] px-1.5 rounded-[3px] flex items-center flex-wrap gap-[0.3rem]  ${novaScoreColors[novaScore].bg}`}
+            className={`w-[5] h-[10] ${pd} rounded-[3px] flex items-center flex-wrap gap-[0.3rem] ${novaScoreColors[novaScore].bg}`}
             title={novaScoreColors[novaScore].title}
         >
-            <p className={`text-[0.7rem] ${novaScoreColors[novaScore].text} font-[Inter] font-[400]`}>Nova - </p>
-            <p className={`${novaScoreColors[novaScore].text} text-[0.8rem] font-[Inter] font-[700]`}>{novaScore}</p>
+            <p className={`text-[0.7rem] ${novaScoreColors[novaScore].text} ${text} font-[Inter] font-[400]`}>Nova - </p>
+            <p className={`${novaScoreColors[novaScore].text}  ${text} text-[0.8rem] font-[Inter] font-[700]`}>{novaScore}</p>
         </div>
     )
 }
 
 Nova.propTypes={
     novaScore : PropTypes.number,
+    pd : PropTypes.string,
+    text : PropTypes.string,
 }
 
 export default Nova
