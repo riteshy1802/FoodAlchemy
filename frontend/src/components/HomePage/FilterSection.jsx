@@ -28,70 +28,78 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Slider } from "@/components/ui/slider"
-import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { updateAllergensIfChanged, updateCategoryIfAdded } from "@/redux/Categories/Category";
+import toast from "react-hot-toast";
+import Dropdown from "./Dropdown";
 
 const FilterSection = () => {
-
-    const frameworks = [
-        {
-            value: "next.js",
-            label: "Next.js",
-        },
-        {
-            value: "sveltekit",
-            label: "SvelteKit",
-        },
-        {
-            value: "nuxt.js",
-            label: "Nuxt.js",
-        },
-        {
-            value: "remix",
-            label: "Remix",
-        },
-        {
-            value: "astro",
-            label: "Astro",
-        },
-    ]
-
     const [minValue, setMinValue] = useState(33);
     const [maxValue, setMaxValue] = useState(77);
     const [allergens, setAllergens] = useState([]);
-    const allergenInputRef = useRef(null);
-    const [addDisable, setAddDisable] = useState(true);
+    const [value, setValue] = useState("Shuffled");
+    const [selectedValue, setSelectedValue] = useState("Default");
+    const [selectedItems, setSelectedItems] = useState([]);
 
-    const disabledButtonStyles = {
-        backgroundColor:'#449173'
-    }
 
-    const handleAllergensAddition = () => {
-        const allergenName = allergenInputRef.current.value
-        if(allergenName.trim().length>0){
-            const allergen = {
-                id:nanoid(),
-                name : allergenInputRef.current.value
+
+    const dispatch = useDispatch();
+    const categories = useSelector((state)=>state.category.category);
+    const allergies = useSelector((state)=>state.category.allergens);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fromStorageCategories = JSON.parse(localStorage.getItem("categories"));
+            if (!fromStorageCategories) {
+                await fetchCategories(); 
+            } else {
+                dispatch(updateCategoryIfAdded(fromStorageCategories));
             }
-            setAllergens((prev)=>[...prev, allergen]);
-            setAddDisable(true)
-            allergenInputRef.current.value="";
+    
+            const fromStorageAllergens = JSON.parse(localStorage.getItem("allergens"));
+            if (!fromStorageAllergens) {
+                await fetchAllergens();
+            } else {
+                dispatch(updateAllergensIfChanged(fromStorageAllergens));
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get('https://world.openfoodfacts.org/categories.json');
+            const data = response.data.tags;
+            const newData = [{ id: 'en:Shuffled', known: '1', name: 'Shuffled', products: '-', url: '-' }, ...data];
+            console.log("Fetched Categories:", newData);
+            localStorage.setItem("categories", JSON.stringify(newData));
+            dispatch(updateCategoryIfAdded(newData));
+        } catch (error) {
+            toast.error("Error occurred while fetching categories.", {
+                position: 'top-right',
+            });
+            console.error(error);
         }
-    }
-
-    const handleInputChange = (e) => {
-        if(e.target.value.trim().length>0){
-            setAddDisable(false);
-        }else{
-            setAddDisable(true)
+    };
+    
+    const fetchAllergens = async () => {
+        try {
+            const response = await axios.get('https://world.openfoodfacts.org/allergens.json');
+            const data = response.data.tags;
+            console.log("Fetched Allergens:", data);
+            localStorage.setItem("allergens", JSON.stringify(data));
+            dispatch(updateAllergensIfChanged(data));
+        } catch (error) {
+            toast.error("Error occurred while fetching allergens.", {
+                position: 'top-right',
+            });
+            console.error(error);
         }
-    }
-
-    const handleAllergenDelete = (id) => {
-        setAllergens((prev)=>prev.filter((item)=>item.id!==id));
-    }
-
+    };
     const handleValueChange = (field, value) => {
         if(field==="min"){
             setMinValue(value);
@@ -103,11 +111,28 @@ const FilterSection = () => {
         }
     }
 
+    const removeHyphens = (str) => {
+        const withoutHyphens = str.replace(/-/g, " ");
+        return withoutHyphens;
+    }
+
+    const handleAllergenDelete = (id) => {
+        setAllergens((prev) => prev.filter((item) => item.id !== id));
+        setSelectedItems((prev) => prev.filter((selectedId) => selectedId !== id));
+    };
+    
+
+    const removecolonsCapitalize = (str) => {
+        const stringWithoutColons = str.replace(/:/g, ' ');
+        const capitalize = stringWithoutColons.charAt(0).toUpperCase()+stringWithoutColons.slice(1)
+        return capitalize;
+    }
+
+
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
 
     return (
-        <div className="min-h-[80vh] ml-* py-2 px-4 sticky top-[6rem] left-0 rounded-[5px]">
+        <div className="min-h-[80vh] h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 rounded-[5px] overflow-y-auto">
             <div className="flex items-center w-[100%]">
                 <p className="font-[Inter] text-[0.9rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] flex items-center decoration-[1.5px] gap-[0.4rem]">
                     <Filter
@@ -139,53 +164,56 @@ const FilterSection = () => {
                             variant="outline"
                             role="combobox"
                             aria-expanded={open}
-                            className="w-[100%] justify-between font-[Inter] text-[0.83rem]"
+                            className="w-[100%] font-[Inter] text-[0.83rem]"
                             >
-                            {value
-                                ? frameworks.find((framework) => framework.value === value)?.label
-                                : "Any"}
+                                <p className="w-[90%] flex items-start text-ellipsis whitespace-nowrap overflow-hidden">
+                                {value
+                                    ? categories.find((category) => category.name === value)?.name
+                                    : "Shuffled"}
+                                </p>
                             <ChevronsUpDown className="ml-1 h-2 w-2 shrink-0 opacity-50" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[100%] p-0">
                             <Command>
-                            <CommandInput placeholder="Search framework..." />
+                            <CommandInput placeholder="Search categories..." />
                             <CommandList>
-                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandEmpty>No category found.</CommandEmpty>
                                 <CommandGroup>
-                                {frameworks.map((framework) => (
+                                {categories.map((category) => (
                                     <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={category.id}
+                                    value={category.name}
                                     onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        setOpen(false)
+                                        setValue(currentValue === value ? "Shuffled" : currentValue);
+                                        setOpen(false);
                                     }}
                                     >
                                     <Check
                                         className={cn(
                                         "h-3 w-3",
-                                        value === framework.value ? "opacity-100" : "opacity-0"
+                                        value === category.name ? "opacity-100" : "opacity-0"
                                         )}
                                     />
-                                    {framework.label}
+                                    {removeHyphens(category.name)}
                                     </CommandItem>
                                 ))}
                                 </CommandGroup>
                             </CommandList>
                             </Command>
                         </PopoverContent>
-                    </Popover>
+                        </Popover>
 
                     {/* Sort Functionality */}
                     <div className="mt-3">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Sort By</p>
                         <Select>
                             <SelectTrigger className="w-[100%] h-8 font-[Inter] text-[0.8rem]">
-                                <SelectValue placeholder="Sort By" defaultValue="A-Z"/>
+                                <SelectValue placeholder="Random" defaultValue="Random"/>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
+                                    <SelectItem className="text-[0.8rem]" value="Random">Shuffled</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="A-Z">A-Z</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="Z-A">Z-A</SelectItem>
                                 </SelectGroup>
@@ -212,13 +240,13 @@ const FilterSection = () => {
                     {/* Energy Inputs */}
                     <div className="mt-3">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Energy(Calories)</p>
-                        <Select>
+                        <Select value={selectedValue} onValueChange={(value) => setSelectedValue(value)}>
                             <SelectTrigger className="w-[100%] h-8 font-[Inter] text-[0.8rem]">
-                                <SelectValue placeholder="Energy" defaultValue="A-Z"/>
+                                <SelectValue placeholder="Default" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem className="text-[0.8rem]" value="any">Any</SelectItem>
+                                    <SelectItem className="text-[0.8rem]" value="Default">Default</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="inc">Increasing</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="dec">Decreasing</SelectItem>
                                     <div className="pb-3 mt-2">
@@ -229,7 +257,7 @@ const FilterSection = () => {
                                                     <Tooltip>
                                                         <TooltipTrigger>
                                                             <div className="p-1 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
-                                                                <RotateCcw size={10} color="#383838"/>
+                                                                <RotateCcw size={10} color="#383838" />
                                                             </div>
                                                             <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
                                                                 <p>Change to default</p>
@@ -239,17 +267,16 @@ const FilterSection = () => {
                                                 </TooltipProvider>
                                             </div>
                                         </div>
-
                                         <div className="px-3">
                                             <div className="flex w-[100%]">
                                                 <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Minimum</p>
                                                 <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{minValue} cal</p>
                                             </div>
-                                            <Slider 
-                                                defaultValue={[minValue]} 
-                                                max={100} 
+                                            <Slider
+                                                defaultValue={[minValue]}
+                                                max={100}
                                                 step={1}
-                                                onValueChange={(value)=>handleValueChange("min", value)} 
+                                                onValueChange={(value) => handleValueChange("min", value)}
                                             />
                                         </div>
                                         <div className="px-3 mt-2">
@@ -257,11 +284,11 @@ const FilterSection = () => {
                                                 <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Maximum</p>
                                                 <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{maxValue} cal</p>
                                             </div>
-                                            <Slider 
-                                                defaultValue={[maxValue]} 
-                                                max={100} 
-                                                step={1} 
-                                                onValueChange={(value)=>handleValueChange("max", value)} 
+                                            <Slider
+                                                defaultValue={[maxValue]}
+                                                max={100}
+                                                step={1}
+                                                onValueChange={(value) => handleValueChange("max", value)}
                                             />
                                         </div>
                                     </div>
@@ -272,27 +299,19 @@ const FilterSection = () => {
 
                     <div className="mt-3  w-[100%] h-auto">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Allergic To</p>
-                        <input 
-                            ref={allergenInputRef} 
-                            placeholder="eg gluten"
-                            className="w-[100%] font-[Inter] indent-[2px] text-[0.8rem] px-2 py-1.5 border border-3-gray rounded-[6px] focus:outline-none"
-                            onChange={(e)=>handleInputChange(e)}
-                        />
-                        <div className="w-[100%] flex mt-2">
-                            <button 
-                                type="button" 
-                                disabled={addDisable}
-                                style={addDisable ? disabledButtonStyles : null}
-                                className="font-[Inter] bg-[#138B4F] ml-auto text-[white] px-3 py-1 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.7rem]"
-                                onClick={handleAllergensAddition}
-                            >
-                                Add
-                            </button>
+                        <div>
+                            <Dropdown
+                                elements={allergies}
+                                allergens={allergens}
+                                setAllergens={setAllergens}
+                                selectedItems={selectedItems}
+                                setSelectedItems={setSelectedItems}
+                            />                        
                         </div>
                         <div className="mt-2 py-2 rounded-[4px] px-2 bg-[#f5f5f5] flex flex-wrap items-center gap-[0.5rem]">
                             {allergens.length>0 ? allergens.map(({id,name})=>(
-                                <div key={id} className="px-2 py-0.5 bg-[#c7eadd] rounded-[10px] inline-flex items-center justify-between gap-[0.2rem]">
-                                    <p className="text-[0.8rem]">{name}</p>
+                                <div key={id} className="px-2.5 py-0.5 bg-[#c7eadd]  rounded-[10px] inline-flex items-center justify-between gap-[0.2rem]">
+                                    <p className="text-[0.8rem] w-[90%]">{removecolonsCapitalize(name)}</p>
                                     <X 
                                         size={12} 
                                         className="cursor-pointer"

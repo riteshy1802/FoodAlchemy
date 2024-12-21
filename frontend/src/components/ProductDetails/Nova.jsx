@@ -38,7 +38,6 @@ const Nova = ({novaScore, pd, text}) => {
 }
 
 Nova.propTypes={
-    novaScore : PropTypes.string,
     pd : PropTypes.string,
     text : PropTypes.string,
 }

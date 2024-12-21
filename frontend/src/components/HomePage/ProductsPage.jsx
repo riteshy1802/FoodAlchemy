@@ -6,11 +6,11 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ProductCard from "./ProductCard";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BarcodeModal from "./BarcodeModal";
 import Spinner from "../Spinner/Spinner";
 const ProductsPage = () => {
-
+    const popupRef = useRef(null);
     const [showBarcodeInput,setShowBarcodeInput] = useState(false); 
 
     const modalOpenFunction = () => {
@@ -32,6 +32,18 @@ const ProductsPage = () => {
             setLoading(false);
         },1000)
     }
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                setShowBarcodeInput(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
     
 
 
@@ -73,7 +85,7 @@ const ProductsPage = () => {
                             </TooltipProvider>
                         </div>
                         {showBarcodeInput && 
-                            <div className="absolute bottom right-8 mt-2 z-[100]">
+                            <div ref={popupRef} className="absolute bottom right-8 mt-2 z-[5]">
                                 <BarcodeModal
                                     modalOpenFunction={modalOpenFunction}
                                 />

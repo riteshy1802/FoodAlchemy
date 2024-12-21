@@ -2,13 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const Category = createSlice({
     name:'categories',
-    initialState:[],
+    initialState:{
+        category : [],
+        allergens : [],
+    },
     reducers : {
         updateCategoryIfAdded : (state, action) => {
-            return action.payload;
+            state.category = action.payload;
+        },
+        updateAllergensIfChanged : (state, action) => {
+            state.allergens = action.payload
         }
     }
 })
 
-export const {updateCategoryIfAdded} = Category.actions;
+export const {updateCategoryIfAdded, updateAllergensIfChanged} = Category.actions;
 export default Category.reducer;

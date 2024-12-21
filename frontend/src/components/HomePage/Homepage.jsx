@@ -5,7 +5,7 @@ const Homepage = () => {
     return (
         <div className="flex w-[100%] mt-20 items-center justify-center gap-[3rem]">
             <div className="w-[100%] h-auto relative flex px-2">
-                <div className="w-[20%] fixed overflow-hidden"> 
+                <div className="w-[20%] top-0 mt-20 fixed overflow-default"> 
                     <FilterSection/>
                 </div>
                 <div className=" ml-[20%] border-l-2 w-[85%] pb-5">
