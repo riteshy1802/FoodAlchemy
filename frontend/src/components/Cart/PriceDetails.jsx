@@ -40,9 +40,15 @@ const PriceDetails = () => {
                     })
                 }
             }else{
-                toast("😀 Coupon already applied!", {
-                    position:'top-right'
-                })
+                if(value!='FA_NEW_YEAR_2024'){
+                    toast.error("Invalid Coupon Applied!",{
+                        position:'top-right'
+                    })
+                }else{
+                    toast("😀 Coupon already applied!", {
+                        position:'top-right'
+                    })
+                }
             }
         }else{
             toast("☹️ Please enter a coupon code!", {
@@ -98,6 +104,9 @@ const PriceDetails = () => {
                                 <p className="font-[Inter] text-[0.8rem] font-[500] text-[#363636]">🥳 You scored big—30% savings on your purchase!</p>
                             </div>
                         }
+                        <div>
+                            <button className="bg-[#0c7842] hover:bg-[#0d693b] active:bg-[#05592f] transition duration-200 ease-in-out mt-2 rounded-[3px] px-3 py-2 font-[Inter] font-[500] text-[whitesmoke] w-[100%]">Pay</button>
+                        </div>
                     </div>
                 </div>
                 <div className="mt-3 bg-[white] px-4 py-3 rounded-[6px] border-2 border-[#f5f5f5] shadow-md">

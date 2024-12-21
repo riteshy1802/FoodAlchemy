@@ -14,7 +14,7 @@ const BarcodeModal = ({modalOpenFunction}) => {
                 <input className="px-2 py-1 w-[100%] focus:outline-none font-[Inter] border rounded-[4px] text-[0.8rem] font-[Inter]" placeholder="eg. 737628064502"/>
             </div>
             <div className="w-[100%] flex">
-                <button className="bg-[#118B50] px-3 py-1 flex text-[white] text-[0.8rem] mt-2 ml-auto items-center justify-center rounded-[3px]">
+                <button className="bg-[#118B50] hover:bg-[#0d7a46] transition duration-200 ease-in-out font-[500] px-3 py-1 flex text-[white] text-[0.8rem] mt-2 ml-auto items-center justify-center rounded-[3px]">
                     Find
                 </button>
             </div>

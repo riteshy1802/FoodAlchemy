@@ -8,12 +8,29 @@ import {
 import ProductCard from "./ProductCard";
 import { useState } from "react";
 import BarcodeModal from "./BarcodeModal";
+import Spinner from "../Spinner/Spinner";
 const ProductsPage = () => {
 
     const [showBarcodeInput,setShowBarcodeInput] = useState(false); 
 
     const modalOpenFunction = () => {
         setShowBarcodeInput((prev)=>!prev);
+    }
+
+    const [loading, setLoading] = useState(false);
+
+    const disabledStyles = {
+        backgroundColor:"#f5f5f5",
+        hover:{
+            scale : 0
+        }
+    }
+
+    const setLoad = () => {
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false);
+        },1000)
     }
     
 
@@ -97,8 +114,40 @@ const ProductsPage = () => {
                 <ProductCard/>
                 <ProductCard/>
             </div>
-            <div className="w-[100%] mt-3 flex px-5 mt-5">
-                <button className="ml-auto px-4 py-1.5 bg-[#e3e3e3] hover:bg-[#cccccc] active:bg-[#bfbfbf] active:scale-[0.98] transition duration-200 ease-in-out flex items-center gap-[0.2rem] font-[Inter] font-[500] text-[#2e2e2e] text-[0.85rem] rounded-[3px]">Load More <ArrowDown strokeWidth={1.5} size={20}/></button>
+            <div className="w-[100%] flex px-5">
+                {!loading ? 
+                    <button 
+                        className={`ml-auto mt-2 ${loading ? "border-2 border-[#d4d4d4]" : "border-2 border-[whitesmoke]"} px-4 py-1.5 bg-[#e3e3e3] hover:bg-[#cccccc] font-[Inter] rounded-[3px]`}
+                        style={loading ? disabledStyles : null}
+                        disabled = {loading}
+                        onClick={setLoad}
+                    >
+                        {loading ? <div className="flex items-center justify-center gap-[0.5rem]">
+                            <Spinner
+                                width={4}
+                                height={4}
+                                fillColor="red"
+                            />
+                            <p className="text-[0.8rem] font-[500] font-[Inter]">Loading...</p>
+                        </div>
+                        :
+                        <div className="flex items-center justify-center gap-[0.2rem]">
+                            <p className="text-[0.8rem] font-[500] font-[Inter]">Load More</p>
+                            <ArrowDown strokeWidth={1.5} size={15}/>
+                        </div>
+                    }
+                    </button>
+                    :
+                    <div className="w-[100%] mt-2 flex items-center justify-center">
+                        <div>
+                            <Spinner
+                                width={8}
+                                height={8}
+                                fillColor="red"
+                            />
+                        </div>
+                    </div>
+                }
             </div>
             
         </div>
