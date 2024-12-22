@@ -8,6 +8,7 @@ export const Products = createSlice({
         image_nutrition_url:"",
         image_ingredients_url:"",
         product_name_en: "",
+        product_name:"",
         brands: "",
         nutriscore_grade: "",
         nova_group: "",

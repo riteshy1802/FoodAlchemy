@@ -10,18 +10,28 @@ function App() {
 
   return (
     <div>
-      <Navbar/>
       <Toaster/>
       <Routes>
         <Route path='/' element={
-          <Homepage/>}
+          <>
+            <Navbar/>
+            <Homepage/>
+          </>
+        }
         />
         <Route path='/cart' element={
-          <Cart/>}
+          <>
+            <Navbar/>
+            <Cart/>
+          </>
+        }
         />
         <Route path='/product/:id' element={
-          <ProductDetails/>}
-        />        
+          <>
+            <ProductDetails/>
+          </>
+        }
+        />
       </Routes>
     </div>
   )

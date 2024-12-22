@@ -1,4 +1,3 @@
-import { updateProductDetails } from "@/redux/Products/Products"
 import axios from "axios"
 import { X } from "lucide-react"
 import PropTypes from "prop-types"
@@ -6,6 +5,7 @@ import { useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import Spinner from "../Spinner/Spinner"
+import { updateBarcode } from "@/redux/Barcode/Barcode"
 
 const BarcodeModal = ({modalOpenFunction}) => {
 
@@ -25,14 +25,15 @@ const BarcodeModal = ({modalOpenFunction}) => {
         try {
             setLoading(true);
             const { data } = await axios.get(
-                `https://world.openfoodfacts.org/api/v2/product/${barcodeInput}?fields=product_name_en,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels`
+                `https://world.openfoodfacts.org/api/v2/product/${barcodeInput}?fields=product_name_en`
             );
             if (data.status === 0) {
                 toast.error("Product not Found! Please recheck your barcode number.");
                 setLoading(false);
             } else {
-                dispatch(updateProductDetails(data.product));
+                dispatch(updateBarcode(barcodeInput));
                 openInNewTabWithId(barcodeInput);
+                console.log(barcodeInput);
                 barcodeInputRef.current.value="";
                 modalOpenFunction();
                 setLoading(false);
