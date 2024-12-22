@@ -1,7 +1,9 @@
-import { ArrowLeft, MoveRight } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
+// import { MoveRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import PriceDetails from "./PriceDetails";
 import CartItem from "./CartItem";
+import { useSelector } from "react-redux";
 
 const Cart = () => {
 
@@ -9,6 +11,8 @@ const Cart = () => {
     const handleBackToShoppping = () => {
         navigate('/')
     }
+
+    const cart = useSelector((state)=>state.cart.cart);
 
 
     const items = [
@@ -21,8 +25,14 @@ const Cart = () => {
         {id:7, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
     ]
 
-    const continueShopping = () => {
-        navigate('/');
+    // const continueShopping = () => {
+    //     navigate('/');
+    // }
+
+    const totalItems = (cartItems) => {
+        console.log(cartItems);
+        const sum = cartItems.reduce((accumulator, currentValue)=>accumulator+currentValue.quantity,0);
+        return sum;
     }
 
 
@@ -44,17 +54,18 @@ const Cart = () => {
                                     <p className="font-[550] text-[1.2rem] text-[whitesmoke] font-[Inter]">Shopping Cart</p>
                                 </div>
                                 <div className="ml-auto">
-                                    <p className="font-[Inter] font-[450] text-[0.85rem] text-[whitesmoke]">Total items : 10</p>
+                                    <p className="font-[Inter] font-[450] text-[0.85rem] text-[whitesmoke]">Total items : {totalItems(cart)}</p>
                                 </div>
                             </div>
 
                             {/* Product CartItems */}
-
-                            {items.length>0 &&
-                                    items.map((item, index)=>(
+                            {cart?.length>0 &&
+                                    cart.map((item, index)=>(
                                     <div key={item.id} className="">
-                                        <CartItem/>
-                                        {index!==items.length-1 && 
+                                        <CartItem
+                                            element={item}
+                                        />
+                                        {index!==cart.length-1 && 
                                             <div className="w-[100%] px-5">
                                             <hr className="mt-5"/>
                                         </div>}
@@ -63,15 +74,15 @@ const Cart = () => {
                             }
                         </div>
                     </div>
-                    <div className="w-[100%]  py-3 flex justify-end">
-                    <button 
-                        type="button" 
-                        className="font-[Inter] bg-[#138B4F] ml-auto text-[white] px-5 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
-                        onClick={continueShopping}
-                    >
-                        Continue Shopping <MoveRight/>
-                    </button>
-                    </div>
+                    {/* <div className="w-[100%]  py-3 flex justify-end">
+                        <button 
+                            type="button" 
+                            className="font-[Inter] bg-[#138B4F] ml-auto text-[white] px-5 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
+                            onClick={continueShopping}
+                        >
+                            Continue Shopping <MoveRight/>
+                        </button>
+                    </div> */}
                 </div>
                 <PriceDetails/>
             </div>

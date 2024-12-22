@@ -4,12 +4,14 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import NutriScore from "../ProductDetails/NutriScore";
 import Nova from "../ProductDetails/Nova";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, decreaseCount } from "@/redux/CartReducer/Cart";
 
 const ProductCard = ({ item, getIdOfItem }) => {
     const [data, setData] = useState([]);
@@ -41,6 +43,12 @@ const ProductCard = ({ item, getIdOfItem }) => {
         setRandomPrice(generateRandomPrice());
     }, []);
 
+    const dispatch = useDispatch();
+    const cart = useSelector((state)=>state.cart.cart)
+    useEffect(()=>{
+        console.log(cart)
+    },[cart])
+
     const upperCase = (str) => str.charAt(0).toUpperCase();
 
     return (
@@ -49,13 +57,18 @@ const ProductCard = ({ item, getIdOfItem }) => {
             {(item.image_url && item.product_name && item.labels) 
                 && 
             <div 
-                className="w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer border-2 border-[white] hover:border-2 hover:border-[#078246] transition-shadow duration-300"
-                onClick={()=>getIdOfItem(item.code)}
+                className="select-none w-[220px] mr-2 mt-2 rounded-[8px] border pb-3 cursor-pointer border-2 border-[white] hover:border-2 hover:border-[#078246] transition-shadow duration-300"
             >
-                <div className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-t-[8px]">
+                <div 
+                    className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-t-[8px]"
+                    onClick={()=>getIdOfItem(item.code)}
+                >
                     <img src={item.image_url} className="h-[25vh] max-w-full rounded-[3px]" alt="Product" />
                 </div>
-                <div className="w-[100%] flex flex-col px-2 mt-1">
+                <div 
+                    className="w-[100%] flex flex-col px-2 mt-1"
+                    onClick={()=>getIdOfItem(item.code)}
+                >
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
@@ -75,12 +88,18 @@ const ProductCard = ({ item, getIdOfItem }) => {
                         </Tooltip>
                     </TooltipProvider>
                 </div>
-                <div className="w-[100%] px-3">
+                <div 
+                    className="w-[100%] px-3"
+                    onClick={()=>getIdOfItem(item.code)}
+                >
                     <p className="text-[#171717] font-[Inter] text-[0.65rem] text-ellipsis overflow-hidden whitespace-nowrap">
                         {trimText(`Categories: ${item.categories}`)}
                     </p>
                 </div>
-                <div className="flex justify-start">
+                <div 
+                    className="flex justify-start"
+                    onClick={()=>getIdOfItem(item.code)}
+                >
                     <div className="pl-3 flex flex-wrap items-center gap-[0.2rem] mt-1">
                         {data.map((element) => (
                             <p
@@ -93,7 +112,10 @@ const ProductCard = ({ item, getIdOfItem }) => {
                         ))}
                     </div>
                 </div>
-                <div className="w-[100%] px-3 py-1 flex items-center mt-1">
+                <div 
+                    className="w-[100%] px-3 py-1 flex items-center mt-1"
+                    onClick={()=>getIdOfItem(item.code)}
+                >
                     <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{randomPrice}</p>
                     <div className="ml-auto flex items-center gap-[0.5rem]">
                         <div className="ml-auto">
@@ -111,10 +133,31 @@ const ProductCard = ({ item, getIdOfItem }) => {
                     </div>
                 </div>
                 <div className="w-[100%] px-3 mt-2">
-                    <button className="w-[100%] bg-[#118B50] active:bg-[#0e7342] transition duration-150 ease-in-out py-1 flex items-center gap-[0.5rem] justify-center rounded-[3px] text-[white]">
-                        <Plus color="white" size={18} />
-                        Add
-                    </button>
+                    {cart.some((element)=>element.code==item.code) ?
+                        <div className="w-[100%] flex items-center justify-center mt-1 gap-[0.5rem]">
+                            <div 
+                                className="px-1.5 py-1.5 bg-[#138B4F] cursor-pointer rounded-full"
+                                onClick={()=>dispatch(decreaseCount(item))}
+                            >
+                                <Minus size={15} color="white"/>
+                            </div>
+                            <p className="flex justify-center border-2 px-5 items-center flex-1">{cart.find(element=>element.code===item.code)?.quantity || 0 }</p>
+                            <div 
+                                className="px-1.5 py-1.5 bg-[#138B4F] cursor-pointer rounded-full"
+                                onClick={()=>dispatch(addToCart(item))}
+                            >
+                                <Plus size={15} color="white"/>
+                            </div>
+                        </div>
+                        :
+                        <button 
+                            className="w-[100%] bg-[#118B50] active:bg-[#0e7342] transition duration-150 ease-in-out py-1 flex items-center gap-[0.5rem] justify-center rounded-[3px] text-[white]"
+                            onClick={()=>dispatch(addToCart(item))}
+                        >
+                            <Plus color="white" size={18} />
+                            Add
+                        </button>
+                    }
                 </div>
             </div>}
         </>

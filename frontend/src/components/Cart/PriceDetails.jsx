@@ -2,6 +2,7 @@ import { useRef, useState } from "react"
 import toast from "react-hot-toast";
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
+import { useSelector } from "react-redux";
 
 
 const PriceDetails = () => {
@@ -14,6 +15,9 @@ const PriceDetails = () => {
         {id : 4, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
         {id : 5, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
     ]
+
+    const cart = useSelector((state)=>state.cart.cart);
+
 
     const [couponApplied, setCouponApplied] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
@@ -74,10 +78,10 @@ const PriceDetails = () => {
                     </div>
                     <div className="mt-3">
                         {
-                            priceDetails?.map(({id, name, price})=>(
-                                <div key={id} className="flex mt-2 items-center justify-between gap-[2rem]">
-                                    <p className="font-[Inter] text-[0.8rem] text-[#323333]">{name}</p>
-                                    <p className="font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333]">₹{price}</p>
+                            cart?.map((item)=>(
+                                <div key={item.code} className="flex mt-2 mb-2 items-center justify-between gap-[2rem]">
+                                    <p className="font-[Inter] text-[0.85rem] text-[#323333] font-[500]">{item.product_name}</p>
+                                    <p className="font-[Inter] font-[500] text-[0.9rem]  text-[#323333]">₹2000</p>
                                 </div>
                             ))
                         }
