@@ -132,7 +132,7 @@ const FilterSection = () => {
     const [open, setOpen] = useState(false)
 
     return (
-        <div className="min-h-[80vh] h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 rounded-[5px] overflow-y-auto">
+        <div className="min-h-[90vh] border-r-2 h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 overflow-y-auto">
             <div className="flex items-center w-[100%]">
                 <p className="font-[Inter] text-[0.9rem] text-[#2e2e2e] font-[500] underline decoration-[#118B50] flex items-center decoration-[1.5px] gap-[0.4rem]">
                     <Filter

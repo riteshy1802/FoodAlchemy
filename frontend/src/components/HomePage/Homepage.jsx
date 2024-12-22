@@ -8,7 +8,7 @@ const Homepage = () => {
                 <div className="w-[20%] top-0 mt-20 fixed overflow-default"> 
                     <FilterSection/>
                 </div>
-                <div className=" ml-[20%] border-l-2 w-[85%] pb-5">
+                <div className=" ml-[20%] w-[85%] pb-5">
                     <ProductsPage/>
                 </div>
             </div>

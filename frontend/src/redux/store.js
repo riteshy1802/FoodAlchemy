@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import productsReducer from './Products/Products';
 import categoryReducer from './Categories/Category';
 import barcodeReducer from './Barcode/Barcode';
+import productArrayReducer from "./Products/ProductHome";
 
 const persistConfig = {
     key: 'root',
@@ -17,6 +18,7 @@ const store = configureStore({
         product: persistedReducer,
         category: categoryReducer,
         barcode: barcodeReducer,
+        allProducts:productArrayReducer,
     },
 });
 
