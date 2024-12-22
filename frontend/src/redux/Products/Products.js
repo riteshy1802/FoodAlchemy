@@ -13,7 +13,8 @@ export const Products = createSlice({
         nova_group: "",
         code: "",
         ingredients_tags: [],
-        nutriments: ""
+        nutriments: "",
+        labels:""
     },
     reducers: {
         updateProductDetails: (state, action) => {

@@ -13,28 +13,16 @@ const ProductDetails = () => {
     const product = useSelector((state) => state.product);
     const [images, setImages] = useState([]); 
     const [activeImage, setActiveImage] = useState("");
-    
-
-    // useEffect(()=>{
-    //     const fetchProductUsingBarcode = async () => {
-    //         try {
-    //             const { data } = await axios.get(
-    //                 `https://world.openfoodfacts.org/api/v2/product/${}?fields=product_name_en,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels`
-    //             );
-    //             if (data.status === 0) {
-    //                 toast.error("Product not Found! Please recheck your barcode number.");
-    //             } else {
-    //                 dispatch(updateProductDetails(data.product));
-    //             }
-    //         } catch (error) {
-    //             toast.error("Some error occurred. Please retry!");
-    //             console.log(error);
-    //         }
-    //     };
-    // })
+    const [labels, setLabels] = useState([]);
 
     useEffect(() => {
         filterNutriments(product.nutriments);
+        if(product){
+            console.log(product.labels);
+            const labelData = product.labels.split(", ");
+            console.log(labelData);
+            setLabels(labelData)
+        }
         setImages([
             {id: nanoid(), url: product.image_url ? product.image_url : "", brokenImage: 'Broken'},
             {id: nanoid(), url: product.image_packaging_url ? product.image_packaging_url : "", brokenImage: 'Broken'},
@@ -156,9 +144,11 @@ const ProductDetails = () => {
                     </div>
                     <p className="text-[0.9rem] mt-1 text-[#616161] font-[Inter] font-[600]">Brand - {product.brands}</p>
                     <div className="w-[100%] flex flex-wrap items-center gap-[0.2rem] mt-3">
-                        <p className="text-[#3b3b3b] font-[Inter] text-[0.8rem] font-[Inter] font-[500] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
-                        <p className="text-[#3b3b3b] font-[Inter] text-[0.8rem] font-[Inter] font-[500] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
-                        <p className="text-[#3b3b3b] font-[Inter] text-[0.8rem] font-[Inter] font-[500] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">Gluten-Free</p>
+                        {
+                            labels.map((item)=>(
+                                <p key={nanoid()} className="text-[#3b3b3b] font-[Inter] text-[0.8rem] font-[Inter] font-[500] rounded-[20px] bg-[#FBF6E9] inline-flex px-1 py-0.5 text-[black]">{item}</p>
+                            ))
+                        }
                     </div>
                     <div className="flex items-center w-[100%]">
                         <div className="flex items-center gap-[2rem]">
