@@ -9,7 +9,6 @@ import avatar from "../../assets/avatar.png";
 import { useNavigate } from "react-router-dom";
 import happyLogo from "../../assets/happy.png"
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
 const Navbar = () => {
 
@@ -19,10 +18,6 @@ const Navbar = () => {
         openInNewTabWithId()
     }
     const cart = useSelector((state)=>state.cart.cart);
-
-    useEffect(() => {
-        console.log(cart)
-    }, [cart]); 
 
     const openInNewTabWithId = () => {
         const url = `/cart`;

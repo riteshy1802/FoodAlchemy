@@ -14,17 +14,6 @@ const Cart = () => {
 
     const cart = useSelector((state)=>state.cart.cart);
 
-
-    const items = [
-        {id:1, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:2, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:3, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:4, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:5, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:6, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-        {id:7, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", qty:10, price:10000, afterDiscount:null},
-    ]
-
     // const continueShopping = () => {
     //     navigate('/');
     // }

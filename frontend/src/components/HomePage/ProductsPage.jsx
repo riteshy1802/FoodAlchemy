@@ -61,7 +61,6 @@ const ProductsPage = () => {
     const fetchProducts = async (isInitialLoad = false) => {
         if (isInitialLoad) setMainLoading(true);
         setFetching(true);
-
         try {
             const response = await axios.get(`https://world.openfoodfacts.org/api/v2/search`, {
                 params: {
@@ -70,8 +69,19 @@ const ProductsPage = () => {
                     fields: "product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity",
                 },
             });
-            const shuffledProducts = response.data.products.sort(() => Math.random() - 0.5);
-            dispatch(updateProductsArray([...productsArray, ...shuffledProducts]));
+            const shuffledProducts = response.data.products.sort(() => Math.random() - 0.5).map(product => {
+                const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+                const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
+                const discountedPrice = Math.floor(randomPrice - (randomPrice * randomDiscount / 100));
+                console.log(randomDiscount,randomPrice,discountedPrice);
+                return {
+                    ...product,
+                    price: randomPrice,
+                    discount: randomDiscount,
+                    discountedPrice: discountedPrice,
+                };
+            });
+            dispatch(updateProductsArray(shuffledProducts));
         } catch (error) {
             console.error(error);
             toast.error("Some error occurred while fetching products!");
@@ -80,10 +90,11 @@ const ProductsPage = () => {
             setFetching(false);
         }
     };
+    
 
     const fetchNextPage = () => {
-        setPage((prevPage) => prevPage + 1);
-    };
+        setPage((prevPage) => prevPage + 1);    
+    }
 
     useEffect(() => {
         fetchProducts(true);

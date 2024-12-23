@@ -1,75 +1,72 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useMemo } from "react"
 import toast from "react-hot-toast";
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useSelector } from "react-redux";
 
+const DISCOUNT_PERCENTAGE = 7;
+const COUPON_CODE = 'FA_NEW_YEAR_2024';
 
 const PriceDetails = () => {
-
     const { width, height } = useWindowSize()
-    const priceDetails = [
-        {id : 1, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
-        {id : 2, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
-        {id : 3, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
-        {id : 4, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
-        {id : 5, name:"VeBNoR Printed Men Polo Neck Dark Green T-Shirt", price:2000},
-    ]
-
-    const cart = useSelector((state)=>state.cart.cart);
-
-
+    const cart = useSelector((state) => state.cart.cart);
     const [couponApplied, setCouponApplied] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
-
     const couponRef = useRef(null);
+
+    const total = useMemo(() => {
+        return cart.reduce((accumulator, currentValue) => {
+            return accumulator + (currentValue.quantity * currentValue.discountedPrice);
+        }, 0);
+    }, [cart]);
+
+    const { discountAmount, grandTotal } = useMemo(() => {
+        if (!couponApplied) return { discountAmount: 0, grandTotal: total };
+        const discount = (total * DISCOUNT_PERCENTAGE / 100);
+        return {
+            discountAmount: parseFloat(discount.toFixed(2)),
+            grandTotal: Math.floor(total - discount)
+        };
+    }, [total, couponApplied]);
 
     const applyCoupon = () => {
         const value = couponRef.current.value;
-        if(value){
-            if(couponApplied===false){
-                if(value==='FA_NEW_YEAR_2024'){
-                    toast.success("🎉 Coupon Applied Successfully",{
-                        position:'top-right'
-                    });
-                    couponRef.current.value=""
-                    setCouponApplied(true);
-                    setShowConfetti(true);
-                    setTimeout(() => {
-                        setShowConfetti(false);
-                    }, 5000);
-                }else{
-                    toast.error("Invalid Coupon Applied!",{
-                        position:'top-right'
-                    })
-                }
-            }else{
-                if(value!='FA_NEW_YEAR_2024'){
-                    toast.error("Invalid Coupon Applied!",{
-                        position:'top-right'
-                    })
-                }else{
-                    toast("😀 Coupon already applied!", {
-                        position:'top-right'
-                    })
-                }
-            }
-        }else{
+        if (!value) {
             toast("☹️ Please enter a coupon code!", {
-                position:'top-right'
-            })
+                position: 'top-right'
+            });
+            return;
         }
-    }
+
+        if (couponApplied) {
+            toast(value === COUPON_CODE 
+                ? "😀 Coupon already applied!" 
+                : "Invalid Coupon Applied!", {
+                position: 'top-right'
+            });
+            return;
+        }
+
+        if (value === COUPON_CODE) {
+            toast.success("🎉 Coupon Applied Successfully", {
+                position: 'top-right'
+            });
+            couponRef.current.value = "";
+            setCouponApplied(true);
+            setShowConfetti(true);
+            setTimeout(() => {
+                setShowConfetti(false);
+            }, 5000);
+        } else {
+            toast.error("Invalid Coupon Applied!", {
+                position: 'top-right'
+            });
+        }
+    };
 
     return (
         <>
-            {
-                showConfetti && 
-                    <Confetti
-                    width={width}
-                    height={height}
-                />
-            }
+            {showConfetti && <Confetti width={width} height={height} />}
             <div className="w-[30%] overflow-x-hidden">
                 <div className="w-[100%] px-4 py-3 border-2 border-[#f5f5f5] rounded-[6px] shadow-md">
                     <div className="w-[100%]">
@@ -77,46 +74,62 @@ const PriceDetails = () => {
                         <hr/>
                     </div>
                     <div className="mt-3">
-                        {
-                            cart?.map((item)=>(
-                                <div key={item.code} className="flex mt-2 mb-2 items-center justify-between gap-[2rem]">
-                                    <p className="font-[Inter] text-[0.85rem] text-[#323333] font-[500]">{item.product_name}</p>
-                                    <p className="font-[Inter] font-[500] text-[0.9rem]  text-[#323333]">₹2000</p>
-                                </div>
-                            ))
-                        }
+                        {cart?.map((item) => (
+                            <div key={item.code} className="flex mt-2 mb-2 items-center justify-between gap-[2rem]">
+                                <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[500]">
+                                    {item.product_name}
+                                    <span className="text-[gray]">(x{item.quantity})</span>
+                                </p>
+                                <p className="font-[Inter] font-[500] text-[0.9rem] text-[#323333]">
+                                    ₹{item.quantity * item.discountedPrice}
+                                </p>
+                            </div>
+                        ))}
                         <hr className="mt-3"/>
                         <div className="w-[100%] flex mt-1 items-center justify-between gap-[2rem]">
-                            <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[600] text-[1rem]">{couponApplied ?  "SubTotal" : "Total" }</p>
-                            <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333] mt-2">₹10000</p>
+                            <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[600] text-[1rem]">
+                                {couponApplied ? "SubTotal" : "Total"}
+                            </p>
+                            <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333] mt-2">
+                                ₹{total}
+                            </p>
                         </div>
-                        {couponApplied && <div className="w-[100%] flex mt-1 items-center justify-between gap-[2rem]">
-                            <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[550] text-[0.85rem]">Discount</p>
-                            <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 mt-2 text-[green]"><span className="text-[black]">-</span> ₹3333.33</p>
-                        </div>}
-                        {couponApplied &&
+                        {couponApplied && (
                             <>
+                                <div className="w-[100%] flex mt-1 items-center justify-between gap-[2rem]">
+                                    <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[550] text-[0.85rem]">
+                                        Discount
+                                    </p>
+                                    <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 mt-2 text-[green]">
+                                        <span className="text-[black]">-</span> ₹{discountAmount}
+                                    </p>
+                                </div>
                                 <hr/>
                                 <div className="w-[100%] flex mt-1 items-center justify-between gap-[2rem]">
-                                    <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[600] text-[1rem]">Grand Total</p>
-                                    <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333] mt-2">₹7777.77</p>
+                                    <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[600] text-[1rem]">
+                                        Grand Total
+                                    </p>
+                                    <p className="ml-auto font-[Inter] font-[500] text-[0.9rem] mb-2 text-[#323333] mt-2">
+                                        ₹{grandTotal}
+                                    </p>
+                                </div>
+                                <div className="w-[100%] bg-[#E3F0AF] rounded-[5px] px-4 py-2">
+                                    <p className="font-[Inter] text-[0.8rem] font-[500] text-[#363636]">
+                                        🥳 You scored big—{DISCOUNT_PERCENTAGE}% savings on your purchase!
+                                    </p>
                                 </div>
                             </>
-                        }
-                        {couponApplied && 
-                            <div className="w-[100%] bg-[#E3F0AF] rounded-[5px] px-4 py-2">
-                                <p className="font-[Inter] text-[0.8rem] font-[500] text-[#363636]">🥳 You scored big—30% savings on your purchase!</p>
-                            </div>
-                        }
+                        )}
                         <div>
-                            <button className="bg-[#0c7842] hover:bg-[#0d693b] active:bg-[#05592f] transition duration-200 ease-in-out mt-2 rounded-[3px] px-3 py-2 font-[Inter] font-[500] text-[whitesmoke] w-[100%]">Pay</button>
+                            <button className="bg-[#0c7842] hover:bg-[#0d693b] active:bg-[#05592f] transition duration-200 ease-in-out mt-2 rounded-[3px] px-3 py-2 font-[Inter] font-[500] text-[whitesmoke] w-[100%]">
+                                Pay
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div className="mt-3 bg-[white] px-4 py-3 rounded-[6px] border-2 border-[#f5f5f5] shadow-md">
                     <div>
                         <p className="font-[Inter] font-[700] text-[0.9rem] mb-1 text-[#858585]">Coupon</p>
-                        {/* <p className="font-[500] text-[#454545]">Coupon</p> */}
                         <p className="text-[0.75rem] text-[gray]">Got a coupon? Save even more by entering it below!</p>
                     </div>
                     <div className="w-[100%] flex items-center mt-2 gap-[1rem]">
@@ -135,11 +148,13 @@ const PriceDetails = () => {
                     </div>
                 </div>
                 <div className="mt-2 bg-[#095931] text-[whitesmoke] mt-3 rounded-[4px] px-4 py-3">
-                    <p className="font-[Inter] text-[0.85rem]">🥳 Kickstart 2024 with a Bang! Use code <span className="font-[700]">FA_NEW_YEAR_2024</span> and enjoy exclusive savings!</p>
+                    <p className="font-[Inter] text-[0.85rem]">
+                        🥳 Kickstart 2024 with a Bang! Use code <span className="font-[700]">{COUPON_CODE}</span> and enjoy exclusive savings!
+                    </p>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default PriceDetails
+export default PriceDetails;

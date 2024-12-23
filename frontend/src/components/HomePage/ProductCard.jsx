@@ -116,7 +116,7 @@ const ProductCard = ({ item, getIdOfItem }) => {
                     className="w-[100%] px-3 py-1 flex items-center mt-1"
                     onClick={()=>getIdOfItem(item.code)}
                 >
-                    <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{randomPrice}</p>
+                    <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{item.price}</p>
                     <div className="ml-auto flex items-center gap-[0.5rem]">
                         <div className="ml-auto">
                             <NutriScore

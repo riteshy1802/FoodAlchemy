@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 
 const CartItem = ({element}) => {
     const [deliverDate, setDeliverDate] = useState();
-
     useEffect(() => {
         const today = new Date();
 
@@ -41,11 +40,11 @@ const CartItem = ({element}) => {
                         <p className="text-[0.9rem] mt-2 font-[500]">Delivery by {deliverDate}</p>
                         <div className="flex items-end gap-[0.5rem]">
                             <div className="mt-1 flex items-end gap-[0.5rem]">
-                                <p className="text-[0.9rem] font-[500] line-through text-[#a3a3a3]">₹10000</p>
-                                <p className="text-[1rem] font-[500] text-[#171717]">₹10000</p>
+                                <p className="text-[0.9rem] font-[500] line-through text-[#a3a3a3]">₹{element.price}</p>
+                                <p className="text-[1rem] font-[500] text-[#171717]">₹{element.discountedPrice}</p>
                             </div>
                             <div>
-                                <p className="text-[0.85rem] font-[500] text-[green]">30% Off 1 coupon applied</p>
+                                <p className="text-[0.85rem] font-[500] text-[green]">{element.discount}% Off 1 coupon applied</p>
                             </div>
                         </div>
                     </div>

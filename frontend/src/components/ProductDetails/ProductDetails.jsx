@@ -1,5 +1,5 @@
 import Barcode from "react-barcode"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { FaHeart, FaShoppingCart  } from "react-icons/fa";
 import NutriScore from "./NutriScore";
@@ -12,6 +12,7 @@ import { updateProductDetails } from "@/redux/Products/Products";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../Spinner/LoadingPage";
 import Navbar from "../Navbar/Navbar";
+import { addToCart, decreaseCount } from "@/redux/CartReducer/Cart";
 
 const ProductDetails = () => {
 
@@ -152,6 +153,8 @@ const ProductDetails = () => {
         return upper
     }
 
+    const cart = useSelector((state)=>state.cart.cart);
+
 
     return (
         <>
@@ -198,20 +201,40 @@ const ProductDetails = () => {
                                         <ArrowRight size={15} className=""/>
                                     </div>
                                 </div>
-                                <div className="flex gap-[1rem] mt-5 items-center justify-center">
-                                    <button 
-                                        type="button" 
-                                        className="font-[Inter] bg-[#28a745] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#218838] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
-                                    >
-                                        <FaShoppingCart/>Add to Cart
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        className="font-[Inter] bg-[#ff6b6b] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#e05656] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
-                                    >
-                                        <FaHeart/>Add to Wishlist
-                                    </button>
-                                </div>
+                                {
+                                    !cart.some((item)=>item.code==productDetails.code) ?
+                                    <div className="flex gap-[1rem] mt-5 items-center justify-center">
+                                        <button 
+                                            type="button" 
+                                            className="font-[Inter] bg-[#28a745] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#218838] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
+                                            onClick={()=>dispatch(addToCart(productDetails))}
+                                        >
+                                            <FaShoppingCart/>Add to Cart
+                                        </button>
+                                        <button 
+                                            type="button" 
+                                            className="font-[Inter] bg-[#ff6b6b] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#e05656] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
+                                        >
+                                            <FaHeart/>Add to Wishlist
+                                        </button>
+                                    </div>
+                                    :
+                                    <div className="w-[100%] flex items-center justify-center mt-5 gap-[0.5rem]">
+                                        <div 
+                                            className="px-3 py-3 bg-[#138B4F] cursor-pointer rounded-full"
+                                            onClick={()=>dispatch(decreaseCount(productDetails))}
+                                        >
+                                            <Minus size={15} color="white"/>
+                                        </div>
+                                        <p className="flex justify-center border-2 px-5 py-1.5 w-[50%] font-[Inter] items-center">{cart.find(element=>element.code===productDetails.code)?.quantity || 0 }</p>
+                                        <div 
+                                            className="px-3 py-3 bg-[#138B4F] cursor-pointer rounded-full"
+                                            onClick={()=>dispatch(addToCart(productDetails))}
+                                        >
+                                            <Plus size={15} color="white"/>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                             <div className="w-[65%] rounded-[3px]">
                             <div className="w-[100%]">
