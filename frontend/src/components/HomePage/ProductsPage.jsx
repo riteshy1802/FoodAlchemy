@@ -1,4 +1,4 @@
-import { ArrowDown, Barcode, Search } from "lucide-react";
+import { ArrowDown, Barcode, Search, X } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -15,6 +15,7 @@ import { updateProductsArray } from "@/redux/Products/ProductHome";
 import toast from "react-hot-toast";
 import LoadingPage from "../Spinner/LoadingPage";
 import { updateBarcode } from "@/redux/Barcode/Barcode";
+import { replaceSearchList } from "@/redux/Search/Search";
 
 const ProductsPage = () => {
     const popupRef = useRef(null);
@@ -22,10 +23,26 @@ const ProductsPage = () => {
     const [page, setPage] = useState(1);
     const [mainLoading, setMainLoading] = useState(true);
     const [fetching, setFetching] = useState(false);
+    const searchByTyping = useRef(null);
+    const [hasInput,setHasInput] = useState(false);
 
     const modalOpenFunction = () => {
         setShowBarcodeInput((prev) => !prev);
     };
+
+    const searchHasSomeText = () => {
+        if(searchByTyping.current.value){
+            setHasInput(true);
+        }else{
+            setHasInput(false);
+        }
+    } 
+
+    const products = useSelector((state)=>state.allProducts.allProducts);
+
+    useEffect(()=>{
+        console.log(products)
+    },[])
 
     const getIdOfItem = async(id) => {
         await fetchProductUsingBarcode(id);
@@ -36,6 +53,23 @@ const ProductsPage = () => {
         const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
+
+    const search = useSelector((state)=>state.search.search);
+    useEffect(()=>{
+        console.log(search);
+    },[search])
+
+    const fetchFromSearch = async() => {
+        const searchInput = searchByTyping.current.value;
+        const plusAddToInput = searchInput.trim().replace(/\s+/g, "+");
+        try {
+            const response = await axios.get(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${plusAddToInput}&fields=product_name_en,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity&json=true`);
+            console.log(response.data);
+            dispatch(replaceSearchList(response.data.products));
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const fetchProductUsingBarcode = async (id) => {
         try {
@@ -73,12 +107,12 @@ const ProductsPage = () => {
                 const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
                 const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
                 const discountedPrice = Math.floor(randomPrice - (randomPrice * randomDiscount / 100));
-                console.log(randomDiscount,randomPrice,discountedPrice);
                 return {
                     ...product,
                     price: randomPrice,
                     discount: randomDiscount,
                     discountedPrice: discountedPrice,
+                    qty:0,
                 };
             });
             dispatch(updateProductsArray(shuffledProducts));
@@ -120,19 +154,31 @@ const ProductsPage = () => {
         <div className="w-[100%] flex flex-col items-start justify-center">
             <div className="w-[100%] mt-2 flex p-4 flex-col justify-between">
                 <div className="w-[100%] flex items-center gap-[1rem]">
-                    <div className="relative w-[100%]">
-                        <Search size={20} color="gray" className="absolute top-1.5 ml-2 left-0" />
+                    <div className="relative w-[100%] flex items-center">
+                        <Search size={20} color="gray" className="absolute  ml-2 left-0" />
                         <div className="flex items-center gap-[2rem] w-[100%]">
                             <input
-                                className="indent-[30px] px-2 py-1.5 w-[100%] focus:outline-none border rounded-[4px] text-[0.9rem] font-[Inter]"
+                                ref={searchByTyping}
+                                className="indent-[30px] px-2 py-2 w-[100%] focus:outline-none border rounded-[4px] text-[0.9rem] font-[Inter]"
                                 placeholder="Search for something..."
+                                onChange={()=>searchHasSomeText()}
                             />
                         </div>
+                        {hasInput 
+                            && 
+                            <X 
+                                size={15} 
+                                color="gray" 
+                                className="cursor-pointer absolute right-0 mr-2"
+                                
+                            />
+                            }
                     </div>
                     <div className="w-[10%]">
                         <button
                             type="button"
-                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out active:scale-[0.98] text-[0.9rem]"
+                            className="font-[Inter] w-[100%] bg-[#138B4F] ml-auto text-[white] px-3 py-2 rounded-[4px] hover:bg-[#166b41] transition duration-200 ease-in-out active:scale-[0.98] text-[0.9rem]"
+                            onClick={()=>fetchFromSearch()}
                         >
                             Search
                         </button>
@@ -143,7 +189,7 @@ const ProductsPage = () => {
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <div className="w-[100%]" onClick={modalOpenFunction}>
-                                            <div className="w-[100%] flex items-center justify-center py-1 px-5 rounded-[2px] cursor-pointer">
+                                            <div className="w-[100%] flex items-center justify-center py-2 px-5 rounded-[2px] cursor-pointer">
                                                 <p className="flex items-center gap-[0.5rem] text-[0.9rem] text-[#171717] font-[Inter] font-[450]">
                                                     <Barcode size={25} color="#383838" />Barcode
                                                 </p>

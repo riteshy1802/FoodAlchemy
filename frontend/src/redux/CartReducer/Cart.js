@@ -12,19 +12,19 @@ export const Cart = createSlice({
             const product = action.payload;
             const existingProduct = state.cart.find(item => item.code == product.code);
             if (existingProduct) {
-                existingProduct.quantity += 1;
+                existingProduct.qty += 1;
             } else {
-                state.cart.push({ ...product, quantity: 1 });
+                state.cart.push({ ...product, qty: 1 });
             }
             localStorage.setItem("cart", JSON.stringify(state.cart));
         },
         decreaseCount: (state, action) => {
             const product = action.payload;
             const existingProduct = state.cart.find(item => item.code == product.code);
-            if (existingProduct.quantity === 1) {
+            if (existingProduct.qty === 1) {
                 state.cart = state.cart.filter(item => item.code != product.code);
             } else {
-                existingProduct.quantity -= 1;
+                existingProduct.qty -= 1;
             }
             localStorage.setItem("cart", JSON.stringify(state.cart));
         },

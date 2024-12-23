@@ -133,12 +133,17 @@ const ProductDetails = () => {
             value: nutriments[valueKey],
             };
         });
-        // console.log(data);
         setNutrients(data);
         return data;
     };
 
+    useEffect(()=>{
+        document.title =  `Happy Shop :) | ${productDetails.product_name}`
+    },[productDetails])
 
+    useEffect(()=>{
+        console.log(productDetails)
+    },[productDetails])
 
     const removeLangTag = (str) => {
         const splittedString = str.split(":")[1];
@@ -226,7 +231,7 @@ const ProductDetails = () => {
                                         >
                                             <Minus size={15} color="white"/>
                                         </div>
-                                        <p className="flex justify-center border-2 px-5 py-1.5 w-[50%] font-[Inter] items-center">{cart.find(element=>element.code===productDetails.code)?.quantity || 0 }</p>
+                                        <p className="flex justify-center border-2 px-5 py-1.5 w-[50%] font-[Inter] items-center">{cart.find(element=>element.code===productDetails.code)?.qty || 0 }</p>
                                         <div 
                                             className="px-3 py-3 bg-[#138B4F] cursor-pointer rounded-full"
                                             onClick={()=>dispatch(addToCart(productDetails))}

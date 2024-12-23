@@ -15,7 +15,6 @@ import { addToCart, decreaseCount } from "@/redux/CartReducer/Cart";
 
 const ProductCard = ({ item, getIdOfItem }) => {
     const [data, setData] = useState([]);
-    const [randomPrice, setRandomPrice] = useState(0);
 
 
     const trimText = (text) => {
@@ -38,16 +37,9 @@ const ProductCard = ({ item, getIdOfItem }) => {
         }
     }, [item.labels]);
 
-    useEffect(() => {
-        const generateRandomPrice = () => Math.floor(Math.random() * (500 - 200 + 1)) + 200;
-        setRandomPrice(generateRandomPrice());
-    }, []);
 
     const dispatch = useDispatch();
     const cart = useSelector((state)=>state.cart.cart)
-    useEffect(()=>{
-        console.log(cart)
-    },[cart])
 
     const upperCase = (str) => str.charAt(0).toUpperCase();
 
@@ -141,7 +133,7 @@ const ProductCard = ({ item, getIdOfItem }) => {
                             >
                                 <Minus size={15} color="white"/>
                             </div>
-                            <p className="flex justify-center border-2 px-5 items-center flex-1">{cart.find(element=>element.code===item.code)?.quantity || 0 }</p>
+                            <p className="flex justify-center border-2 px-5 items-center flex-1">{cart.find(element=>element.code===item.code)?.qty || 0 }</p>
                             <div 
                                 className="px-1.5 py-1.5 bg-[#138B4F] cursor-pointer rounded-full"
                                 onClick={()=>dispatch(addToCart(item))}

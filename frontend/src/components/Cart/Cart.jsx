@@ -1,9 +1,13 @@
 import { ArrowLeft } from "lucide-react"
 // import { MoveRight } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import PriceDetails from "./PriceDetails";
 import CartItem from "./CartItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
+import { updateBarcode } from "@/redux/Barcode/Barcode";
+import toast from "react-hot-toast";
 
 const Cart = () => {
 
@@ -14,9 +18,9 @@ const Cart = () => {
 
     const cart = useSelector((state)=>state.cart.cart);
 
-    // const continueShopping = () => {
-    //     navigate('/');
-    // }
+    useEffect(()=>{
+        document.title = "Happy Shop :) | Cart"
+    },[])
 
     const totalItems = (cartItems) => {
         console.log(cartItems);

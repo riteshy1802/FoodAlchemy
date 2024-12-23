@@ -17,7 +17,11 @@ export const Products = createSlice({
         nutriments: "",
         labels: "",
         categories: "",
-        quantity: ""
+        quantity: "",
+        price:0,
+        discount:0,
+        discountedPrice:0,
+        qty:0,
     },
     reducers: {
         updateProductDetails: (state, action) => {

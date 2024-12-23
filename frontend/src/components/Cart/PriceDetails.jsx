@@ -16,7 +16,7 @@ const PriceDetails = () => {
 
     const total = useMemo(() => {
         return cart.reduce((accumulator, currentValue) => {
-            return accumulator + (currentValue.quantity * currentValue.discountedPrice);
+            return accumulator + (currentValue.qty * currentValue.discountedPrice);
         }, 0);
     }, [cart]);
 
@@ -78,10 +78,10 @@ const PriceDetails = () => {
                             <div key={item.code} className="flex mt-2 mb-2 items-center justify-between gap-[2rem]">
                                 <p className="font-[Inter] text-[0.8rem] text-[#323333] font-[500]">
                                     {item.product_name}
-                                    <span className="text-[gray]">(x{item.quantity})</span>
+                                    <span className="text-[gray]">(x{item.qty})</span>
                                 </p>
                                 <p className="font-[Inter] font-[500] text-[0.9rem] text-[#323333]">
-                                    ₹{item.quantity * item.discountedPrice}
+                                    ₹{item.qty * item.discountedPrice}
                                 </p>
                             </div>
                         ))}

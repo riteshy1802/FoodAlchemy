@@ -1,7 +1,10 @@
+import { updateBarcode } from "@/redux/Barcode/Barcode";
 import { addToCart, decreaseCount, removeFromCart } from "@/redux/CartReducer/Cart";
+import axios from "axios";
 import { Minus, Plus } from "lucide-react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 
@@ -23,6 +26,33 @@ const CartItem = ({element}) => {
     }, []);
     const dispatch = useDispatch();
 
+    const openInNewTabWithId = (id) => {
+        const url = `/product/${id}`;
+        const fullUrl = window.location.origin + url;
+        window.open(fullUrl, "_blank");
+    };
+
+
+    const fetchProductUsingBarcode = async (id) => {
+        try {
+            const { data } = await axios.get(
+                `https://world.openfoodfacts.org/api/v2/product/${id}?fields=product_name_en`
+            );
+            if (data.status === 0) {
+                toast.error("Product not Found! Please recheck your barcode number.");
+            } else {
+                dispatch(updateBarcode(id));
+                openInNewTabWithId(id);
+            }
+        } catch (error) {
+            toast.error("Some error occurred. Please retry!");
+            console.log(error);
+        }
+    };
+    const handleProductRedirect = async(id)=>{
+        await fetchProductUsingBarcode(id);
+    }
+
     return (
         <div>
             <div className="select-none w-[100%] px-4 pt-5 flex items-start rounded-b-[8px] gap-[1rem]">
@@ -34,8 +64,11 @@ const CartItem = ({element}) => {
                 <div className="w-[100%] pt-2 flex items-center gap-[1rem]">
                     <div>
                         <div>
-                            <p className="text-[1.1rem] hover:underline cursor-pointer overflow-ellipsis whitespace-nowrap overflow-hidden">{element.product_name}</p>
-                            <p className="text-[0.8rem] mt-1 font-[500] text-[gray]">Qty : {element.quantity}</p>
+                            <p 
+                                className="text-[1.1rem] hover:underline cursor-pointer overflow-ellipsis whitespace-nowrap overflow-hidden"
+                                onClick={()=>handleProductRedirect(element.code)}
+                            >{element.product_name}</p>
+                            <p className="text-[0.8rem] mt-1 font-[500] text-[gray]">Qty : {element.qty}</p>
                         </div>
                         <p className="text-[0.9rem] mt-2 font-[500]">Delivery by {deliverDate}</p>
                         <div className="flex items-end gap-[0.5rem]">
@@ -59,7 +92,7 @@ const CartItem = ({element}) => {
                         >
                             <Minus size={15} color="white"/>
                         </div>
-                        <p className="flex justify-center border-2 px-5 items-center flex-1">{element.quantity}</p>
+                        <p className="flex justify-center border-2 px-5 items-center flex-1">{element.qty}</p>
                         <div 
                             className="px-1.5 py-1.5 bg-[#138B4F] cursor-pointer rounded-full"
                             onClick={()=>dispatch(addToCart(element))}
