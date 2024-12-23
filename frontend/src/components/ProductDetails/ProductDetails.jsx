@@ -281,6 +281,15 @@ const ProductDetails = () => {
                                     height={40}
                                 />
                             </div>
+                            <div className="flex items-end gap-[0.6rem] mb-3">
+                                <div className="flex items-end gap-[0.3rem]">
+                                    <p className="text-[1.1rem] font-[500] line-through text-[#a3a3a3]">₹{productDetails.price}</p>
+                                    <p className="text-[1.5rem] font-[650] text-[#2e2e2e]">₹{productDetails.discountedPrice}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[1.1rem] font-[500] text-[green]">{productDetails.discount}% Off</p>
+                                </div>
+                            </div>
                             <div>
                                 <p className="text-[0.9rem] text-[#616161] font-[Inter] font-[600]">Ingredients - </p>
                                 <div className="w-[70%]">
