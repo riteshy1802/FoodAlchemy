@@ -28,7 +28,7 @@ const CartItem = ({element}) => {
 
     const openInNewTabWithId = (id, price,discount) => {
         const url = `/product/${id}/price/${price}/discount/${discount}`;
-        const fullUrl = "https://food-alchemy-mesb.vercel.app" + url;
+        const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
 

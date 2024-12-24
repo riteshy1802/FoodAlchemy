@@ -17,7 +17,7 @@ const BarcodeModal = ({modalOpenFunction}) => {
         const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
         const url = `/product/${id}/price/${randomPrice}/discount/${randomDiscount}`;
 
-        const fullUrl = "https://food-alchemy-mesb.vercel.app" + url;
+        const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
 

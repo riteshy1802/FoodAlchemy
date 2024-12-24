@@ -20,8 +20,8 @@ const Navbar = () => {
     const cart = useSelector((state)=>state.cart.cart);
 
     const openInNewTabWithId = () => {
-        // const url = `/cart`;
-        const fullUrl = "https://food-alchemy-mesb.vercel.app/cart";
+        const url = `/cart`;
+        const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
 
