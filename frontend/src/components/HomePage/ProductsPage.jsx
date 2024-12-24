@@ -41,7 +41,7 @@ const ProductsPage = () => {
 
     const openInNewTabWithId = (id, price, discount) => {
         const url = `/product/${id}/price/${price}/discount/${discount}`;
-        const fullUrl = "https://food-alchemy-mesb.vercel.app/" + url;
+        const fullUrl = "https://food-alchemy-mesb-1ccjzbcrq-riteshs-projects-ac706131.vercel.app/" + url;
         window.open(fullUrl, "_blank");
     };
     const fetchFromSearch = async () => {
