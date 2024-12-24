@@ -3,44 +3,54 @@ import {
     sortEnergetically,
     sortByNutritionGrade,
     filterOutAllergens,
+    filterOutCategory,
 } from './Filters';
 
 
 export const compiledFunctionFilter = (products, filters) => {
-    console.log(filters);
     let sortByOrder = false;
     let nutriGradeOrder = false;
     let energyOrder = false;
     const sortBy = filters.sortBy;
     const nutriGrade = filters.nutriGrade;
     const energy = filters.energy;
-    console.log("SortBy: ", sortBy, "NutriGrade : ", nutriGrade, "Energy : ", energy);
-    if(sortBy==='a-z'){
-        sortByOrder = true;//ascending true...
+
+    if (sortBy === 'a-z') {
+        sortByOrder = true; // ascending true...
     }
-    if(nutriGrade==='asc'){
-        nutriGradeOrder = true;//ascending
+    if (nutriGrade === 'asc') {
+        nutriGradeOrder = true; // ascending
     }
-    if(energy==='inc'){
-        energyOrder = true;//ascending
+    if (energy === 'inc') {
+        energyOrder = true; // ascending
     }
 
     let filteredProducts = products;
-    if (filters.allergicItems.length > 0) {
-        filteredProducts = filterOutAllergens(filteredProducts, filters.allergicItems);
+
+    if (filters.category !== 'Shuffled') {
+        filteredProducts = filterOutCategory(filteredProducts, filters.category);
+        // console.log('Filtered by Category:', filteredProducts);
     }
 
-    if(sortBy!=='random'){
-        filteredProducts = sortAlphabetically(filteredProducts,sortByOrder);
+    if (filters.allergicItems.length > 0) {
+        filteredProducts = filterOutAllergens(filteredProducts, filters.allergicItems);
+        // console.log('Filtered by Allergens:', filteredProducts);
     }
-    if(energy!=='default'){
-        filteredProducts = sortEnergetically(filteredProducts,nutriGradeOrder);
+
+    if (sortBy !== 'random') {
+        filteredProducts = sortAlphabetically(filteredProducts, sortByOrder, filters);
+        // console.log('Sorted Alphabetically:', filteredProducts);
     }
-    if(nutriGrade!=='default'){
-        filteredProducts = sortByNutritionGrade(filteredProducts,energyOrder)
+
+    if (energy !== 'default') {
+        filteredProducts = sortEnergetically(filteredProducts, energyOrder);
+        // console.log('Sorted by Energy:', filteredProducts);
     }
-    if(filters.allergicItem.length>0){
-        filteredProducts = filterOutAllergens(filteredProducts, filters.allergicItem);
+
+    if (nutriGrade !== 'default') {
+        filteredProducts = sortByNutritionGrade(filteredProducts, nutriGradeOrder);
+        // console.log('Sorted by Nutrition Grade:', filteredProducts);
     }
+
     return filteredProducts;
-}
+};

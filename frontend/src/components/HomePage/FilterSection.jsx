@@ -37,11 +37,10 @@ import toast from "react-hot-toast";
 import Dropdown from "./Dropdown";
 import { updateFilters } from "@/redux/Filter/Filter";
 import { updateCategoryBasedFetching } from "@/redux/CategoryBasedFetching/CategoryBasedFetching";
+import PropTypes from "prop-types";
+import { compiledFunctionFilter } from "../Filters/CompiledFilters";
 
-const FilterSection = () => {
-    // const [minValue, setMinValue] = useState(33);
-    // const [maxValue, setMaxValue] = useState(77);
-    // const [allergens, setAllergens] = useState([]);
+const FilterSection = ({setMainLoading}) => {
     const [value, setValue] = useState("Shuffled");
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -70,6 +69,10 @@ const FilterSection = () => {
     
         fetchData();
     }, []);
+
+    useEffect(()=>{
+        console.log(allergies);
+    },[allergies])
     
     const fetchCategories = async () => {
         try {
@@ -101,17 +104,6 @@ const FilterSection = () => {
             console.error(error);
         }
     };
-    // const handleValueChange = (field, value) => {
-    //     if(field==="min"){
-    //         setMinValue(value);
-    //         return;
-    //     }
-    //     if(field==="max"){
-    //         setMaxValue(value);
-    //         return;
-    //     }
-    // }
-
     const removeHyphens = (str) => {
         const withoutHyphens = str.replace(/-/g, " ");
         return withoutHyphens;
@@ -141,6 +133,7 @@ const FilterSection = () => {
         dispatch(updateFilters({key:"nutriGrade", value:"default"}))
         dispatch(updateFilters({key:"energy", value:"default"}))
         dispatch(updateFilters({key:"allergicItems", value:[]}))
+        dispatch(updateCategoryBasedFetching([]));
     }
 
     const handleChangeInFilters = (field, value) => {
@@ -160,48 +153,61 @@ const FilterSection = () => {
     useEffect(() => {
         const fetchByCategory = async () => {
             try {
-                if(filters.category!=='Shuffled'){
+                setMainLoading(true);
+                console.log('Filters:', filters);
+    
+                if (filters.category !== 'Shuffled') {
                     const categ = filters.category;
                     const url = `https://world.openfoodfacts.org/category/${categ}.json`;
                     const response = await axios.get(url, {
                         params: {
                             page_size: 50,
-                            fields: 'product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity',
+                            fields: 'product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity,allergens_tags',
                         },
                     });
-                    console.log(response.data.products);
+    
+                    console.log('Fetched products:', response.data.products);
                     const shuffledProducts = response.data.products
-                    .sort(() => Math.random() - 0.5)
-                    .map((product) => {
-                        const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
-                        const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
-                        const discountedPrice = Math.floor(randomPrice - (randomPrice * randomDiscount) / 100);
-                        return {
-                            ...product,
-                            price: randomPrice,
-                            discount: randomDiscount,
-                            discountedPrice,
-                            qty: 0,
-                        };
-                    });
-                    dispatch(updateCategoryBasedFetching(shuffledProducts));
-                }else{
+                        .sort(() => Math.random() - 0.5)
+                        .map((product) => {
+                            const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+                            const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
+                            const discountedPrice = Math.floor(randomPrice - (randomPrice * randomDiscount) / 100);
+                            return {
+                                ...product,
+                                price: randomPrice,
+                                discount: randomDiscount,
+                                discountedPrice,
+                                qty: 0,
+                            };
+                        });
+    
+                    console.log('Shuffled products:', shuffledProducts);
+    
+                    const filteredProducts = compiledFunctionFilter(shuffledProducts, filters);
+                    console.log('Filtered products:', filteredProducts);
+    
+                    dispatch(updateCategoryBasedFetching(filteredProducts));
+                    setMainLoading(false);
+                } else {
                     dispatch(updateCategoryBasedFetching([]));
+                    setMainLoading(false);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setMainLoading(false);
             }
         };
+    
         fetchByCategory();
-    }, [filters]);
-
+    }, [filters.category]);    
 
     useEffect(()=>{
         console.log(filters);
         //we listen for the change in the category if there is a change we will change the local state and then the local state will be making a fetch and then we pass it through a bunch of sorting functions and then set the reduc state and the data will be accordingly populated on the screen : 
-        
+        const newData = compiledFunctionFilter(CategoryBasedFetching, filters);
+        dispatch(updateCategoryBasedFetching(newData));
     },[filters])
-
 
     return (
         <div className="min-h-[90vh] border-r-2 h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 overflow-y-auto">
@@ -365,49 +371,9 @@ const FilterSection = () => {
         </div>
     )
 }
+FilterSection.propTypes={
+    mainLoading:PropTypes.bool,
+    setMainLoading:PropTypes.func,
+}
 
 export default FilterSection
-
-{/* <div className="pb-3 mt-2">
-    <div className="w-[100%] flex items-center">
-        <p className="ml-3 font-[Inter] text-[#545454] mb-1 text-[0.7rem]">Custom</p>
-        <div className="ml-auto mr-3">
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="p-1 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
-                            <RotateCcw size={10} color="#383838" />
-                        </div>
-                        <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
-                            <p>Change to default</p>
-                        </TooltipContent>
-                    </TooltipTrigger>
-                </Tooltip>
-            </TooltipProvider>
-        </div>
-    </div>
-    <div className="px-3">
-        <div className="flex w-[100%]">
-            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Minimum</p>
-            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{minValue} cal</p>
-        </div>
-        <Slider
-            defaultValue={[minValue]}
-            max={100}
-            step={1}
-            onValueChange={(value) => handleValueChange("min", value)}
-        />
-    </div>
-    <div className="px-3 mt-2">
-        <div className="flex w-[100%]">
-            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Maximum</p>
-            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{maxValue} cal</p>
-        </div>
-        <Slider
-            defaultValue={[maxValue]}
-            max={100}
-            step={1}
-            onValueChange={(value) => handleValueChange("max", value)}
-        />
-    </div>
-</div> */}

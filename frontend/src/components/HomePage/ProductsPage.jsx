@@ -16,15 +16,17 @@ import toast from "react-hot-toast";
 import LoadingPage from "../Spinner/LoadingPage";
 import { updateBarcode } from "@/redux/Barcode/Barcode";
 import { replaceSearchList } from "@/redux/Search/Search";
+import PropTypes from "prop-types";
 
-const ProductsPage = () => {
+const ProductsPage = ({mainLoading, setMainLoading}) => {
     const popupRef = useRef(null);
     const [showBarcodeInput, setShowBarcodeInput] = useState(false);
     const [page, setPage] = useState(1);
-    const [mainLoading, setMainLoading] = useState(true);
     const [fetching, setFetching] = useState(false);
     const searchByTyping = useRef(null);
     const [hasInput, setHasInput] = useState(false);
+    const CategoryBasedFetching = useSelector((state)=>state.categoryBasedFetching.categoryBasedFetching);
+
 
     const modalOpenFunction = () => {
         setShowBarcodeInput((prev) => !prev);
@@ -41,7 +43,7 @@ const ProductsPage = () => {
 
     const openInNewTabWithId = (id, price, discount) => {
         const url = `/product/${id}/price/${price}/discount/${discount}`;
-        const fullUrl = "https://food-alchemy-mesb.vercel.app" + url;
+        const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
     const fetchFromSearch = async () => {
@@ -49,7 +51,7 @@ const ProductsPage = () => {
         const searchInput = searchByTyping.current.value.trim().replace(/\s+/g, "+");
         try {
             const response = await axios.get(
-                `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchInput}&fields=product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity&json=true`
+                `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchInput}&fields=product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity,allergens_tags&json=true`
             );
             if (response.data.products && response.data.products.length > 0) {
                 const shuffledProducts = response.data.products
@@ -109,7 +111,7 @@ const ProductsPage = () => {
                 params: {
                     page_size: 50,
                     page,
-                    fields: "product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity",
+                    fields: "product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity,allergens_tags",
                 },
             });
             const shuffledProducts = response.data.products
@@ -233,8 +235,8 @@ const ProductsPage = () => {
             ) : (
                 <>
                     <div className="w-[100%] flex px-4 flex-wrap justify-start gap-[0.2rem]">
-                        {(search.length>0?search:productsArray).length > 0 &&
-                            (search.length>0?search:productsArray).map((item) => (
+                        {(search.length>0?search:(CategoryBasedFetching.length>0?CategoryBasedFetching:productsArray)).length > 0 &&
+                            (search.length>0?search:(CategoryBasedFetching.length>0?CategoryBasedFetching:productsArray)).map((item) => (
                                 <ProductCard getIdOfItem={getIdOfItem} key={item.code} item={item} />
                             ))}
                     </div>
@@ -265,4 +267,10 @@ const ProductsPage = () => {
         </div>
     );
 }
+
+ProductsPage.propTypes={
+    mainLoading:PropTypes.bool,
+    setMainLoading:PropTypes.func,
+}
+
 export default ProductsPage;

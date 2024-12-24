@@ -1,32 +1,70 @@
-const sortAlphabetically = (products, isAscending=true) => {
-    return [...products].sort((a,b)=>{
-        const comparison =  a.product_name.localeCompare(b.product_name);
-        return isAscending ? comparison : -comparison;
-    })
-}
+const sortAlphabetically = (products, ascending, filters = {}) => {
+    const sortBy = filters.sortBy || 'random';
 
-const sortEnergetically = (products, isAscending) => {
-    return [...products].sort((a,b)=>{
-        const nutrimentsA = a.nutriments;//nutriments is an object so we will get the kcal value to maintain the simplicity..
-        const nutrimentsB = b.nutriments;
-        return isAscending ? (nutrimentsA["energy-kcal"] || 0)-(nutrimentsB["energy-kcal"] || 0) :  (nutrimentsB["energy-kcal"] || 0)-(nutrimentsA["energy-kcal"] || 0);
-    })
-}
+    if (sortBy === "random") {
+        const shuffled = [...products].sort(() => Math.random() - 0.5);
+        return shuffled;
+    } else {
+        const sorted = products.slice().sort((a, b) => {
+            if (a.product_name && b.product_name) {
+                return ascending
+                    ? a.product_name.localeCompare(b.product_name)
+                    : b.product_name.localeCompare(a.product_name);
+            } else {
+                return 0;
+            }
+        });
+        return sorted;
+    }
+};
 
-const sortByNutritionGrade = (products, isAscending) => {
-    const nutritionGradeMap = {a:1, b:2, c:3, d:4, e:5};
-    return [...products].sort((a,b)=>{
-        const gradeComparison = (nutritionGradeMap[a.nutriscore_grade] || 6)-(nutritionGradeMap[b.nutriscore_grade] || 6);
-        return isAscending ? gradeComparison : -gradeComparison;
-        //if grade is not provided then we will assign grade 6 to it..
-    })
-}
+const sortEnergetically = (products, ascending) => {
+    const sorted = products.slice().sort((a, b) => {
+        return ascending ? a.nutriments.energy - b.nutriments.energy : b.nutriments.energy - a.nutriments.energy;
+        });
+        console.log('Energetically sorted:', sorted);
+    return sorted;
+};
 
-const filterOutAllergens = (products, allergicItems)=>{
-    const newArray = [...products];
-    return newArray.filter((product)=>{
-        return !product.allergens_tags?.some((allergen) => allergicItems.includes(allergen));
-    })
-}
+const filterOutCategory = (products, category) => {
+    const filtered = products.filter(product => product.categories.includes(category));
+    console.log('Filtered by category:', filtered);
+    return filtered;
+};
 
-export {sortAlphabetically, sortByNutritionGrade, sortEnergetically, filterOutAllergens};
+const sortByNutritionGrade = (products, ascending) => {
+    const sorted = products.slice().sort((a, b) => {
+        const gradeOrder = ['a', 'b', 'c', 'd', 'e'];
+        return ascending
+            ? gradeOrder.indexOf(a.nutriscore_grade) - gradeOrder.indexOf(b.nutriscore_grade)
+            : gradeOrder.indexOf(b.nutriscore_grade) - gradeOrder.indexOf(a.nutriscore_grade);
+        });
+        console.log('Sorted by nutrition grade:', sorted);
+    return sorted;
+};
+
+
+const filterOutAllergens = (products, allergens) => {
+    if (allergens.length === 0) {
+        return products;
+    }
+
+    const filtered = [...products].filter(product => {
+        return !allergens.some(allergen => 
+            product.allergens_tags.includes(allergen.id)
+        );
+    });
+
+    console.log('Filtered by allergens:', filtered);
+    return filtered;
+};
+
+
+
+export {
+    sortAlphabetically,
+    sortByNutritionGrade,
+    sortEnergetically,
+    filterOutAllergens,
+    filterOutCategory,
+};

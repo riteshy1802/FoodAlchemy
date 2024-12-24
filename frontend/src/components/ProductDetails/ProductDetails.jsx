@@ -55,7 +55,7 @@ const ProductDetails = () => {
             }));
     
             const { data } = await axios.get(
-                `https://world.openfoodfacts.org/api/v2/product/${id}?fields=product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity`
+                `https://world.openfoodfacts.org/api/v2/product/${id}?fields=product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity,allergens_tags`
             );
     
             if (data.status === 0) {
