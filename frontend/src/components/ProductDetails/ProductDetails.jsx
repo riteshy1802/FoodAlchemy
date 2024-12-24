@@ -25,9 +25,16 @@ const ProductDetails = () => {
 
     const dispatch = useDispatch();
 
-    const {id} = useParams();
+    const {id, price, discount} = useParams();
     const productDetails = useSelector((state)=>state.product);
+    const [disCountedPrice, setDiscountedPrice] = useState(0);
     
+    useEffect(()=>{
+        setDiscountedPrice(Math.floor(price-(price*discount/100)));
+        // console.log(price,discount);
+    },[discount,price]);
+
+
     const fetchProductUsingBarcode = async () => {
         try {
             setLoading(true);
@@ -63,6 +70,9 @@ const ProductDetails = () => {
                     image_packaging_url: data.product.image_packaging_url || "",
                     image_nutrition_url: data.product.image_nutrition_url || "",
                     image_ingredients_url: data.product.image_ingredients_url || "",
+                    price:price,
+                    discount:discount,
+                    discountedPrice:Math.floor(price-price*discount/100),
                 };
     
                 dispatch(updateProductDetails(updatedData));
@@ -83,9 +93,7 @@ const ProductDetails = () => {
     useEffect(() => {
         filterNutriments(product.nutriments);
         if(product){
-            // console.log(product.labels);
             const labelData = product.labels.split(",");
-            // console.log(labelData);
             setLabels(labelData)
         }
         setImages([
@@ -127,10 +135,10 @@ const ProductDetails = () => {
             const unitKey = `${key}_unit`;
             const valueKey = `${key}_value`;
             return {
-            id: nanoid(),
-            name: key,
-            unit: nutriments[unitKey],
-            value: nutriments[valueKey],
+                id: nanoid(),
+                name: key,
+                unit: nutriments[unitKey],
+                value: nutriments[valueKey],
             };
         });
         setNutrients(data);
@@ -211,14 +219,14 @@ const ProductDetails = () => {
                                     <div className="flex gap-[1rem] mt-5 items-center justify-center">
                                         <button 
                                             type="button" 
-                                            className="font-[Inter] bg-[#28a745] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#218838] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
+                                            className="font-[Inter] bg-[#28a745] text-[white] select-none px-3 py-1.5 rounded-[4px] hover:bg-[#218838] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
                                             onClick={()=>dispatch(addToCart(productDetails))}
                                         >
                                             <FaShoppingCart/>Add to Cart
                                         </button>
                                         <button 
                                             type="button" 
-                                            className="font-[Inter] bg-[#ff6b6b] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#e05656] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
+                                            className="font-[Inter] select-none bg-[#ff6b6b] text-[white] px-3 py-1.5 rounded-[4px] hover:bg-[#e05656] transition duration-200 ease-in-out text-[0.9rem] flex items-center gap-[1rem]"
                                         >
                                             <FaHeart/>Add to Wishlist
                                         </button>
@@ -283,11 +291,11 @@ const ProductDetails = () => {
                             </div>
                             <div className="flex items-end gap-[0.6rem] mb-3">
                                 <div className="flex items-end gap-[0.3rem]">
-                                    <p className="text-[1.1rem] font-[500] line-through text-[#a3a3a3]">₹{productDetails.price}</p>
-                                    <p className="text-[1.5rem] font-[650] text-[#2e2e2e]">₹{productDetails.discountedPrice}</p>
+                                    <p className="text-[1.1rem] font-[500] line-through text-[#a3a3a3]">₹{price}</p>
+                                    <p className="text-[1.5rem] font-[650] text-[#2e2e2e]">₹{disCountedPrice}</p>
                                 </div>
                                 <div>
-                                    <p className="text-[1.1rem] font-[500] text-[green]">{productDetails.discount}% Off</p>
+                                    <p className="text-[1.1rem] font-[500] text-[green]">{discount}% Off</p>
                                 </div>
                             </div>
                             <div>

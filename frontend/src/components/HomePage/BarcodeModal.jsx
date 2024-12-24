@@ -13,7 +13,10 @@ const BarcodeModal = ({modalOpenFunction}) => {
     const [loading, setLoading] = useState(false);
 
     const openInNewTabWithId = (id) => {
-        const url = `/product/${id}`;
+        const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+        const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
+        const url = `/product/${id}/price/${randomPrice}/discount/${randomDiscount}`;
+
         const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };

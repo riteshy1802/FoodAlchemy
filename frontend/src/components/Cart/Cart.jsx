@@ -24,7 +24,7 @@ const Cart = () => {
 
     const totalItems = (cartItems) => {
         console.log(cartItems);
-        const sum = cartItems.reduce((accumulator, currentValue)=>accumulator+currentValue.quantity,0);
+        const sum = cartItems.reduce((accumulator, currentValue)=>accumulator+currentValue.qty,0);
         return sum;
     }
 

@@ -53,13 +53,13 @@ const ProductCard = ({ item, getIdOfItem }) => {
             >
                 <div 
                     className="w-[100%] flex items-center justify-center pt-2 pb-2 px-2 bg-[whitesmoke] rounded-t-[8px]"
-                    onClick={()=>getIdOfItem(item.code)}
+                    onClick={()=>getIdOfItem(item.code, item.price,item.discount)}
                 >
                     <img src={item.image_url} className="h-[25vh] max-w-full rounded-[3px]" alt="Product" />
                 </div>
                 <div 
                     className="w-[100%] flex flex-col px-2 mt-1"
-                    onClick={()=>getIdOfItem(item.code)}
+                    onClick={()=>getIdOfItem(item.code, item.price,item.discount)}
                 >
                     <TooltipProvider>
                         <Tooltip>
@@ -82,7 +82,7 @@ const ProductCard = ({ item, getIdOfItem }) => {
                 </div>
                 <div 
                     className="w-[100%] px-3"
-                    onClick={()=>getIdOfItem(item.code)}
+                    onClick={()=>getIdOfItem(item.code, item.price,item.discount)}
                 >
                     <p className="text-[#171717] font-[Inter] text-[0.65rem] text-ellipsis overflow-hidden whitespace-nowrap">
                         {trimText(`Categories: ${item.categories}`)}
@@ -90,7 +90,7 @@ const ProductCard = ({ item, getIdOfItem }) => {
                 </div>
                 <div 
                     className="flex justify-start"
-                    onClick={()=>getIdOfItem(item.code)}
+                    onClick={()=>getIdOfItem(item.code, item.price,item.discount)}
                 >
                     <div className="pl-3 flex flex-wrap items-center gap-[0.2rem] mt-1">
                         {data.map((element) => (
@@ -106,7 +106,11 @@ const ProductCard = ({ item, getIdOfItem }) => {
                 </div>
                 <div 
                     className="w-[100%] px-3 py-1 flex items-center mt-1"
-                    onClick={()=>getIdOfItem(item.code)}
+                    onClick={()=>{
+                        console.log(item.code,item.price,item.discount);
+                        getIdOfItem(item.code, item.price,item.discount)}
+
+                    }
                 >
                     <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{item.price}</p>
                     <div className="ml-auto flex items-center gap-[0.5rem]">

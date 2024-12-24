@@ -26,7 +26,7 @@ function App() {
           </>
         }
         />
-        <Route path='/product/:id' element={
+        <Route path='/product/:id/price/:price/discount/:discount' element={
           <>
             <ProductDetails/>
           </>

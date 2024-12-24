@@ -44,12 +44,12 @@ const ProductsPage = () => {
         console.log(products)
     },[])
 
-    const getIdOfItem = async(id) => {
-        await fetchProductUsingBarcode(id);
+    const getIdOfItem = async(id, price, discount) => {
+        await fetchProductUsingBarcode(id,price,discount);
     }
 
-    const openInNewTabWithId = (id) => {
-        const url = `/product/${id}`;
+    const openInNewTabWithId = (id, price,discount) => {
+        const url = `/product/${id}/price/${price}/discount/${discount}`;
         const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
@@ -71,7 +71,7 @@ const ProductsPage = () => {
         }
     }
 
-    const fetchProductUsingBarcode = async (id) => {
+    const fetchProductUsingBarcode = async (id, price, discount) => {
         try {
             const { data } = await axios.get(
                 `https://world.openfoodfacts.org/api/v2/product/${id}?fields=product_name_en`
@@ -80,7 +80,7 @@ const ProductsPage = () => {
                 toast.error("Product not Found! Please recheck your barcode number.");
             } else {
                 dispatch(updateBarcode(id));
-                openInNewTabWithId(id);
+                openInNewTabWithId(id,price,discount);
             }
         } catch (error) {
             toast.error("Some error occurred. Please retry!");
