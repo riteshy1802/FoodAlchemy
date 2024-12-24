@@ -21,7 +21,7 @@ const Navbar = () => {
 
     const openInNewTabWithId = () => {
         const url = `/cart`;
-        const fullUrl = window.location.origin + url;
+        const fullUrl = "https://food-alchemy-mesb.vercel.app/" + url;
         window.open(fullUrl, "_blank");
     };
 

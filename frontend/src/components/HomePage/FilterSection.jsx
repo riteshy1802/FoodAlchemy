@@ -36,7 +36,7 @@ import { updateAllergensIfChanged, updateCategoryIfAdded } from "@/redux/Categor
 import toast from "react-hot-toast";
 import Dropdown from "./Dropdown";
 import { updateFilters } from "@/redux/Filter/Filter";
-// import { updateCategoryBasedFetching } from "@/redux/CategoryBasedFetching/CategoryBasedFetching";
+import { updateCategoryBasedFetching } from "@/redux/CategoryBasedFetching/CategoryBasedFetching";
 
 const FilterSection = () => {
     // const [minValue, setMinValue] = useState(33);
@@ -157,7 +157,43 @@ const FilterSection = () => {
         console.log("CategoryBasedFetchedProducts", CategoryBasedFetching);
     },[CategoryBasedFetching])
 
-    
+    useEffect(() => {
+        const fetchByCategory = async () => {
+            try {
+                if(filters.category!=='Shuffled'){
+                    const categ = filters.category;
+                    const url = `https://world.openfoodfacts.org/category/${categ}.json`;
+                    const response = await axios.get(url, {
+                        params: {
+                            page_size: 50,
+                            fields: 'product_name_en,product_name,brands,nutriscore_grade,nova_group,code,ingredients_tags,nutriments,image_url,image_packaging_url,image_nutrition_url,image_ingredients_url,labels,categories,quantity',
+                        },
+                    });
+                    console.log(response.data.products);
+                    const shuffledProducts = response.data.products
+                    .sort(() => Math.random() - 0.5)
+                    .map((product) => {
+                        const randomDiscount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+                        const randomPrice = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
+                        const discountedPrice = Math.floor(randomPrice - (randomPrice * randomDiscount) / 100);
+                        return {
+                            ...product,
+                            price: randomPrice,
+                            discount: randomDiscount,
+                            discountedPrice,
+                            qty: 0,
+                        };
+                    });
+                    dispatch(updateCategoryBasedFetching(shuffledProducts));
+                }else{
+                    dispatch(updateCategoryBasedFetching([]));
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchByCategory();
+    }, [filters]);
 
 
     useEffect(()=>{
