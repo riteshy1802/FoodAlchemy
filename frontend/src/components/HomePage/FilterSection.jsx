@@ -36,6 +36,7 @@ import { updateAllergensIfChanged, updateCategoryIfAdded } from "@/redux/Categor
 import toast from "react-hot-toast";
 import Dropdown from "./Dropdown";
 import { updateFilters } from "@/redux/Filter/Filter";
+// import { updateCategoryBasedFetching } from "@/redux/CategoryBasedFetching/CategoryBasedFetching";
 
 const FilterSection = () => {
     // const [minValue, setMinValue] = useState(33);
@@ -151,8 +152,18 @@ const FilterSection = () => {
         }
     }
 
+    const CategoryBasedFetching = useSelector((state)=>state.categoryBasedFetching.categoryBasedFetching);
     useEffect(()=>{
-        console.log(filters)
+        console.log("CategoryBasedFetchedProducts", CategoryBasedFetching);
+    },[CategoryBasedFetching])
+
+    
+
+
+    useEffect(()=>{
+        console.log(filters);
+        //we listen for the change in the category if there is a change we will change the local state and then the local state will be making a fetch and then we pass it through a bunch of sorting functions and then set the reduc state and the data will be accordingly populated on the screen : 
+        
     },[filters])
 
 

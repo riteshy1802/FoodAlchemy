@@ -8,6 +8,7 @@ import productArrayReducer from "./Products/ProductHome";
 import cartReducer from "./CartReducer/Cart";
 import searchReducer from "./Search/Search";
 import filterReducers from "./Filter/Filter";
+import categoryBasedFetchingReducer from "./CategoryBasedFetching/CategoryBasedFetching";
 
 const persistConfig = {
     key: 'root',
@@ -24,7 +25,8 @@ const store = configureStore({
         allProducts:productArrayReducer,
         cart:cartReducer,
         search:searchReducer,
-        filters:filterReducers
+        filters:filterReducers,
+        categoryBasedFetching:categoryBasedFetchingReducer
     },
 });
 
