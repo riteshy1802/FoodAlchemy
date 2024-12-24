@@ -26,14 +26,14 @@ const CartItem = ({element}) => {
     }, []);
     const dispatch = useDispatch();
 
-    const openInNewTabWithId = (id) => {
-        const url = `/product/${id}`;
+    const openInNewTabWithId = (id, price,discount) => {
+        const url = `/product/${id}/price/${price}/discount/${discount}`;
         const fullUrl = window.location.origin + url;
         window.open(fullUrl, "_blank");
     };
 
 
-    const fetchProductUsingBarcode = async (id) => {
+    const fetchProductUsingBarcode = async (id, price,discount) => {
         try {
             const { data } = await axios.get(
                 `https://world.openfoodfacts.org/api/v2/product/${id}?fields=product_name_en`
@@ -42,15 +42,15 @@ const CartItem = ({element}) => {
                 toast.error("Product not Found! Please recheck your barcode number.");
             } else {
                 dispatch(updateBarcode(id));
-                openInNewTabWithId(id);
+                openInNewTabWithId(id, price,discount);
             }
         } catch (error) {
             toast.error("Some error occurred. Please retry!");
             console.log(error);
         }
     };
-    const handleProductRedirect = async(id)=>{
-        await fetchProductUsingBarcode(id);
+    const handleProductRedirect = async(id, price,discount)=>{
+        await fetchProductUsingBarcode(id, price,discount);
     }
 
     return (
@@ -66,7 +66,7 @@ const CartItem = ({element}) => {
                         <div>
                             <p 
                                 className="text-[1.1rem] hover:underline cursor-pointer overflow-ellipsis whitespace-nowrap overflow-hidden"
-                                onClick={()=>handleProductRedirect(element.code)}
+                                onClick={()=>handleProductRedirect(element.code, element.price,element.discount)}
                             >{element.product_name}</p>
                             <p className="text-[0.8rem] mt-1 font-[500] text-[gray]">Qty : {element.qty}</p>
                         </div>
