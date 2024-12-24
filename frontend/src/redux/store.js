@@ -7,6 +7,7 @@ import barcodeReducer from './Barcode/Barcode';
 import productArrayReducer from "./Products/ProductHome";
 import cartReducer from "./CartReducer/Cart";
 import searchReducer from "./Search/Search";
+import filterReducers from "./Filter/Filter";
 
 const persistConfig = {
     key: 'root',
@@ -23,6 +24,7 @@ const store = configureStore({
         allProducts:productArrayReducer,
         cart:cartReducer,
         search:searchReducer,
+        filters:filterReducers
     },
 });
 

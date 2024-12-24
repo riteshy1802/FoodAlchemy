@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { ChevronDown } from "lucide-react";
-const Dropdown = ({elements, setAllergens, selectedItems, setSelectedItems}) => {
+import { useDispatch, useSelector } from "react-redux";
+import { updateFilters } from "@/redux/Filter/Filter";
+const Dropdown = ({elements, selectedItems, setSelectedItems}) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const popupRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -9,6 +11,8 @@ const Dropdown = ({elements, setAllergens, selectedItems, setSelectedItems}) => 
     const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
     const handleSearchChange = (e) => setSearchQuery(e.target.value);
+    const dispatch = useDispatch();
+    const filters = useSelector((state)=>state.filters);
 
     const toggleCheckbox = (elementId, element, isChecked) => {
         setSelectedItems((prev) =>
@@ -16,12 +20,13 @@ const Dropdown = ({elements, setAllergens, selectedItems, setSelectedItems}) => 
                 ? prev.filter((id) => id !== elementId)
                 : [...prev, elementId]
         );
+        const allergies = filters.allergicItems;
         if (isChecked) {
-            setAllergens((prevAllergens) => [...prevAllergens, element]);
+            const newAllergies = [...allergies, element];
+            dispatch(updateFilters({ key: "allergicItems", value: newAllergies }));
         } else {
-            setAllergens((prevAllergens) =>
-                prevAllergens.filter((item) => item.id !== element.id) 
-            );
+            const newData = allergies.filter((item) => item.id !== elementId);
+            dispatch(updateFilters({ key: "allergicItems", value: newData }));
         }
     };
 

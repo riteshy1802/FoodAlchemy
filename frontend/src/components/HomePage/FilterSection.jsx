@@ -29,19 +29,19 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useEffect, useState } from "react"
-import { Slider } from "@/components/ui/slider"
+// import { Slider } from "@/components/ui/slider"
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updateAllergensIfChanged, updateCategoryIfAdded } from "@/redux/Categories/Category";
 import toast from "react-hot-toast";
 import Dropdown from "./Dropdown";
+import { updateFilters } from "@/redux/Filter/Filter";
 
 const FilterSection = () => {
-    const [minValue, setMinValue] = useState(33);
-    const [maxValue, setMaxValue] = useState(77);
-    const [allergens, setAllergens] = useState([]);
+    // const [minValue, setMinValue] = useState(33);
+    // const [maxValue, setMaxValue] = useState(77);
+    // const [allergens, setAllergens] = useState([]);
     const [value, setValue] = useState("Shuffled");
-    const [selectedValue, setSelectedValue] = useState("Default");
     const [selectedItems, setSelectedItems] = useState([]);
 
 
@@ -100,16 +100,16 @@ const FilterSection = () => {
             console.error(error);
         }
     };
-    const handleValueChange = (field, value) => {
-        if(field==="min"){
-            setMinValue(value);
-            return;
-        }
-        if(field==="max"){
-            setMaxValue(value);
-            return;
-        }
-    }
+    // const handleValueChange = (field, value) => {
+    //     if(field==="min"){
+    //         setMinValue(value);
+    //         return;
+    //     }
+    //     if(field==="max"){
+    //         setMaxValue(value);
+    //         return;
+    //     }
+    // }
 
     const removeHyphens = (str) => {
         const withoutHyphens = str.replace(/-/g, " ");
@@ -117,7 +117,9 @@ const FilterSection = () => {
     }
 
     const handleAllergenDelete = (id) => {
-        setAllergens((prev) => prev.filter((item) => item.id !== id));
+        const allergies = filters.allergicItems;
+        const updatedAllergens = allergies.filter((item)=>item.id !== id);
+        dispatch(updateFilters({key:"allergicItems", value:updatedAllergens}))
         setSelectedItems((prev) => prev.filter((selectedId) => selectedId !== id));
     };
     
@@ -128,8 +130,27 @@ const FilterSection = () => {
         return capitalize;
     }
 
+    const filters = useSelector((state)=>state.filters);
+    const [open, setOpen] = useState(false);
+    const resetAllFilters = () => {
+        console.log("Resetting all filters..");
+        setValue("Shuffled")
+        dispatch(updateFilters({key:"category", value:"Shuffled"}))
+        dispatch(updateFilters({key:"sortBy", value:"random"}))
+        dispatch(updateFilters({key:"nutriGrade", value:"default"}))
+        dispatch(updateFilters({key:"energy", value:"default"}))
+        dispatch(updateFilters({key:"allergicItems", value:[]}))
+    }
 
-    const [open, setOpen] = useState(false)
+    const handleChangeInFilters = (field, value) => {
+        if(Array.isArray(value)){
+            const newAllergens = [...filters.allergicItems, ...value];
+            dispatch(updateFilters({key:field, value:newAllergens}))
+        }else if(typeof(value)==="string"){
+            dispatch(updateFilters({key:field, value:value}))
+        }
+    }
+
 
     return (
         <div className="min-h-[90vh] border-r-2 h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 overflow-y-auto">
@@ -144,10 +165,15 @@ const FilterSection = () => {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <div className="p-2 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
+                                <div 
+                                    className="p-2 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full"
+                                    onClick={()=>resetAllFilters()}
+                                >
                                     <RotateCcw size={15} color="#383838"/>
                                 </div>
-                                <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
+                                <TooltipContent 
+                                    className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out"
+                                >
                                     <p>Reset all changes</p>
                                 </TooltipContent>
                             </TooltipTrigger>
@@ -185,7 +211,8 @@ const FilterSection = () => {
                                     key={category.id}
                                     value={category.name}
                                     onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "Shuffled" : currentValue);
+                                        setValue(currentValue)
+                                        handleChangeInFilters("category", currentValue);
                                         setOpen(false);
                                     }}
                                     >
@@ -207,15 +234,15 @@ const FilterSection = () => {
                     {/* Sort Functionality */}
                     <div className="mt-3">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Sort By</p>
-                        <Select>
+                        <Select value={filters.sortBy} onValueChange={(value)=>handleChangeInFilters("sortBy", value)}>
                             <SelectTrigger className="w-[100%] h-8 font-[Inter] text-[0.8rem]">
-                                <SelectValue placeholder="Random" defaultValue="Random"/>
+                                <SelectValue placeholder="Random"/>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem className="text-[0.8rem]" value="Random">Shuffled</SelectItem>
-                                    <SelectItem className="text-[0.8rem]" value="A-Z">A-Z</SelectItem>
-                                    <SelectItem className="text-[0.8rem]" value="Z-A">Z-A</SelectItem>
+                                    <SelectItem className="text-[0.8rem]" value="random">Random</SelectItem>
+                                    <SelectItem className="text-[0.8rem]" value="a-z">A-Z</SelectItem>
+                                    <SelectItem className="text-[0.8rem]" value="z-a">Z-A</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -224,12 +251,13 @@ const FilterSection = () => {
                     {/* Nutrition grade */}
                     <div className="mt-3">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Nutrition grade</p>
-                        <Select>
+                        <Select value={filters.nutriGrade} onValueChange={(value)=>handleChangeInFilters("nutriGrade", value)}>
                             <SelectTrigger className="w-[100%] h-8 font-[Inter] text-[0.8rem]">
-                                <SelectValue placeholder="Nutrition grade" defaultValue="A-Z"/>
+                                <SelectValue placeholder="Default" defaultValue="default"/>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
+                                    <SelectItem className="text-[0.8rem]" value="default">Default</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="asc">Ascending</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="desc">Descending</SelectItem>
                                 </SelectGroup>
@@ -240,58 +268,15 @@ const FilterSection = () => {
                     {/* Energy Inputs */}
                     <div className="mt-3">
                         <p className="font-[Inter] text-[gray] mb-1 text-[0.7rem]">Energy(Calories)</p>
-                        <Select value={selectedValue} onValueChange={(value) => setSelectedValue(value)}>
+                        <Select value={filters.energy} onValueChange={(value)=>handleChangeInFilters("energy", value)}>
                             <SelectTrigger className="w-[100%] h-8 font-[Inter] text-[0.8rem]">
                                 <SelectValue placeholder="Default" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem className="text-[0.8rem]" value="Default">Default</SelectItem>
+                                    <SelectItem className="text-[0.8rem]" value="default">Default</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="inc">Increasing</SelectItem>
                                     <SelectItem className="text-[0.8rem]" value="dec">Decreasing</SelectItem>
-                                    <div className="pb-3 mt-2">
-                                        <div className="w-[100%] flex items-center">
-                                            <p className="ml-3 font-[Inter] text-[#545454] mb-1 text-[0.7rem]">Custom</p>
-                                            <div className="ml-auto mr-3">
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger>
-                                                            <div className="p-1 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
-                                                                <RotateCcw size={10} color="#383838" />
-                                                            </div>
-                                                            <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
-                                                                <p>Change to default</p>
-                                                            </TooltipContent>
-                                                        </TooltipTrigger>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            </div>
-                                        </div>
-                                        <div className="px-3">
-                                            <div className="flex w-[100%]">
-                                                <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Minimum</p>
-                                                <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{minValue} cal</p>
-                                            </div>
-                                            <Slider
-                                                defaultValue={[minValue]}
-                                                max={100}
-                                                step={1}
-                                                onValueChange={(value) => handleValueChange("min", value)}
-                                            />
-                                        </div>
-                                        <div className="px-3 mt-2">
-                                            <div className="flex w-[100%]">
-                                                <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Maximum</p>
-                                                <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{maxValue} cal</p>
-                                            </div>
-                                            <Slider
-                                                defaultValue={[maxValue]}
-                                                max={100}
-                                                step={1}
-                                                onValueChange={(value) => handleValueChange("max", value)}
-                                            />
-                                        </div>
-                                    </div>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -302,14 +287,12 @@ const FilterSection = () => {
                         <div>
                             <Dropdown
                                 elements={allergies}
-                                allergens={allergens}
-                                setAllergens={setAllergens}
                                 selectedItems={selectedItems}
                                 setSelectedItems={setSelectedItems}
                             />                        
                         </div>
                         <div className="mt-2 py-2 rounded-[4px] px-2 bg-[#f5f5f5] flex flex-wrap items-center gap-[0.5rem]">
-                            {allergens.length>0 ? allergens.map(({id,name})=>(
+                            {filters.allergicItems.length>0 ? filters.allergicItems.map(({id,name})=>(
                                 <div key={id} className="px-2.5 py-0.5 bg-[#c7eadd]  rounded-[10px] inline-flex items-center justify-between gap-[0.2rem]">
                                     <p className="text-[0.8rem] w-[90%]">{removecolonsCapitalize(name)}</p>
                                     <X 
@@ -333,3 +316,47 @@ const FilterSection = () => {
 }
 
 export default FilterSection
+
+{/* <div className="pb-3 mt-2">
+    <div className="w-[100%] flex items-center">
+        <p className="ml-3 font-[Inter] text-[#545454] mb-1 text-[0.7rem]">Custom</p>
+        <div className="ml-auto mr-3">
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <div className="p-1 flex ml-auto bg-[#f2f2f2] hover:bg-[#c9c9c9] active:rotate-[-30deg] transition duration-100 ease-in-out cursor-pointer rounded-full">
+                            <RotateCcw size={10} color="#383838" />
+                        </div>
+                        <TooltipContent className="cursor-default text-[0.6rem] font-medium py-1 px-2 font-[Inter] transition duration-200 ease-in-out">
+                            <p>Change to default</p>
+                        </TooltipContent>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
+    </div>
+    <div className="px-3">
+        <div className="flex w-[100%]">
+            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Minimum</p>
+            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{minValue} cal</p>
+        </div>
+        <Slider
+            defaultValue={[minValue]}
+            max={100}
+            step={1}
+            onValueChange={(value) => handleValueChange("min", value)}
+        />
+    </div>
+    <div className="px-3 mt-2">
+        <div className="flex w-[100%]">
+            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem]">Maximum</p>
+            <p className="font-[Inter] text-[gray] mb-1 text-[0.65rem] ml-auto">{maxValue} cal</p>
+        </div>
+        <Slider
+            defaultValue={[maxValue]}
+            max={100}
+            step={1}
+            onValueChange={(value) => handleValueChange("max", value)}
+        />
+    </div>
+</div> */}
