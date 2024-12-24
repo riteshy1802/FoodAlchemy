@@ -112,7 +112,7 @@ const ProductCard = ({ item, getIdOfItem }) => {
 
                     }
                 >
-                    <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{item.price}</p>
+                    <p className="font-[Inter] font-[450] text-[#5c5c5c]">₹{item.discountedPrice}</p>
                     <div className="ml-auto flex items-center gap-[0.5rem]">
                         <div className="ml-auto">
                             <NutriScore

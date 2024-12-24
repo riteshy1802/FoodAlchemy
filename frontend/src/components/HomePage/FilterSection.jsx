@@ -151,6 +151,10 @@ const FilterSection = () => {
         }
     }
 
+    useEffect(()=>{
+        console.log(filters)
+    },[filters])
+
 
     return (
         <div className="min-h-[90vh] border-r-2 h-auto ml-* py-2 px-4 sticky top-[6rem] left-0 overflow-y-auto">
